@@ -4,20 +4,35 @@ public class Epic extends Task {
      private ArrayList<Subtask> subtaskReferences;
 
      public Epic(String title, String description) {
-         super(title, description);
+         super(title, description, TaskStatus.NEW);
          subtaskReferences = new ArrayList<>();
      }
 
-    public Epic(int taskID, String title, String description, TaskStatus status, ArrayList<Subtask> subtaskReferences) {
-        super(taskID, title, description, status);
-        this.subtaskReferences = subtaskReferences;
+    public Epic(int taskID, String title, String description) {
+        super(taskID, title, description, TaskStatus.NEW);
+        subtaskReferences = new ArrayList<>();
     }
 
 
     public ArrayList<Subtask> getSubtaskReferences() {
-         return subtaskReferences;
+         return new ArrayList<>(subtaskReferences);
     }
 
+    public void clearAllSubtasks() {
+         subtaskReferences.clear();
+    }
+
+    public void addSubtask(Subtask subtask) {
+         subtaskReferences.add(subtask);
+    }
+
+    public void deleteSubtask(Subtask subtask) {
+         subtaskReferences.remove(subtask);
+    }
+
+    public void updateSubtask(Subtask subtask) {
+         subtaskReferences.set(subtaskReferences.indexOf(subtask), subtask);
+    }
 
     public void updateStatus() {
          if (subtaskReferences.isEmpty())  {

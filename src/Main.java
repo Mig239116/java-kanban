@@ -7,12 +7,14 @@ public class Main {
         TaskManager taskManager = new TaskManager();
         taskManager.createTask(new Task(
                 "Простая задача 1",
-                "Описание простой задачи 1"
+                "Описание простой задачи 1",
+                TaskStatus.NEW
                 )
         );
         taskManager.createTask(new Task(
-                        "Простая задача 2",
-                        "Описание простой задачи 2"
+                "Простая задача 2",
+                "Описание простой задачи 2",
+                TaskStatus.IN_PROGRESS
                 )
         );
         taskManager.createEpic(new Epic("Эпик 1", "Описание эпика 1"));
@@ -20,18 +22,21 @@ public class Main {
         taskManager.createSubtask(new Subtask(
                 "Подзадача 1",
                 "Описание подзадачи 1",
+                TaskStatus.NEW,
                 3
                 )
         );
         taskManager.createSubtask(new Subtask(
                         "Подзадача 2",
                         "Описание подзадачи 2",
+                        TaskStatus.NEW,
                         3
                 )
         );
         taskManager.createSubtask(new Subtask(
                         "Подзадача 3",
                         "Описание подзадачи 3",
+                        TaskStatus.NEW,
                         4
                 )
         );
@@ -48,7 +53,7 @@ public class Main {
         taskManager.updateTask(new Task(2,
                         "Простая задача 15",
                         "Описание простой задачи 15",
-                        TaskStatus.IN_PROGRESS
+                        TaskStatus.DONE
                 )
         );
         taskManager.updateSubtask(new Subtask(
