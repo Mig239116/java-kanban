@@ -18,6 +18,15 @@ public class Epic extends Task {
          return new ArrayList<>(subtaskReferences);
     }
 
+    public Subtask getSubtask(int taskID) {
+         for (Subtask subtask: subtaskReferences) {
+             if (subtask.getID() == taskID) {
+                 return subtask;
+             }
+         }
+         return null;
+    }
+
     public void clearAllSubtasks() {
          subtaskReferences.clear();
     }
@@ -30,8 +39,8 @@ public class Epic extends Task {
          subtaskReferences.remove(subtask);
     }
 
-    public void updateSubtask(Subtask subtask) {
-         subtaskReferences.set(subtaskReferences.indexOf(subtask), subtask);
+    public void updateSubtask(Subtask oldSubtask, Subtask newSubtask) {
+         subtaskReferences.set(subtaskReferences.indexOf(oldSubtask), newSubtask);
     }
 
     public void updateStatus() {

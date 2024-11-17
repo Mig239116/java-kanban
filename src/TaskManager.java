@@ -1,4 +1,3 @@
-import java.util.HashMap;
 import java.util.ArrayList;
 
 public class TaskManager {
@@ -11,37 +10,28 @@ public class TaskManager {
     }
 
     public ArrayList<Task> getAllTasks() {
-        return new ArrayList<Task>(taskDatabase.tasks.values());
+        return new ArrayList<>(taskDatabase.tasks.values());
     }
 
     public ArrayList<Subtask> getAllSubtasks() {
-        return new ArrayList<Subtask>(taskDatabase.subtasks.values());
+        return new ArrayList<>(taskDatabase.subtasks.values());
     }
 
     public ArrayList<Epic> getAllEpics() {
-        return new ArrayList<Epic>(taskDatabase.epics.values());
+        return new ArrayList<>(taskDatabase.epics.values());
     }
 
-    public boolean isEpicExists(int taskID) {
-        if (taskDatabase.epics.containsKey(taskID)) {
-            return true;
-        }
-        return false;
+    private boolean isEpicExists(int taskID) {
+        return taskDatabase.epics.containsKey(taskID);
     }
 
-    public boolean isSubtaskExists(int taskID) {
-        if (taskDatabase.subtasks.containsKey(taskID)) {
-            return true;
-        }
-        return false;
+    private boolean isSubtaskExists(int taskID) {
+        return taskDatabase.subtasks.containsKey(taskID);
     }
 
-    public boolean isSubtaskEpicReferenceValid(Subtask newSubtask) {
+    private boolean isSubtaskEpicReferenceValid(Subtask newSubtask) {
         Subtask existingSubtask = taskDatabase.subtasks.get(newSubtask.getID());
-        if (existingSubtask.getEpicReference() == newSubtask.getEpicReference()) {
-            return true;
-        }
-        return false;
+        return existingSubtask.getEpicReference() == newSubtask.getEpicReference();
     }
 
     public void createTask(Task task) {
@@ -73,11 +63,12 @@ public class TaskManager {
         if (taskDatabase.tasks.containsKey(task.getID())) taskDatabase.tasks.put(task.getID(), task);
     }
 
-    public void updateSubtask(Subtask subtask) {
-        if (this.isSubtaskExists(subtask.getID()) && this.isSubtaskEpicReferenceValid(subtask)) {
-            Epic currentEpic = taskDatabase.epics.get(subtask.getEpicReference());
-            currentEpic.updateSubtask(subtask);
-            taskDatabase.subtasks.put(subtask.getID(), subtask);
+    public void updateSubtask(Subtask newSubtask) {
+        if (this.isSubtaskExists(newSubtask.getID()) && this.isSubtaskEpicReferenceValid(newSubtask)) {
+            Epic currentEpic = taskDatabase.epics.get(newSubtask.getEpicReference());
+            Subtask oldSubtask = currentEpic.getSubtask(newSubtask.getID());
+            currentEpic.updateSubtask(oldSubtask, newSubtask);
+            taskDatabase.subtasks.put(newSubtask.getID(), newSubtask);
             currentEpic.updateStatus();
         }
     }
@@ -95,7 +86,7 @@ public class TaskManager {
     }
 
     public void deleteSubtaskByID(int taskID) {
-        if (taskDatabase.subtasks.containsKey(taskID)) {
+        if (this.isSubtaskExists(taskID)) {
             Subtask subtask = taskDatabase.subtasks.get(taskID);
             Epic currentEpic =taskDatabase.epics.get(subtask.getEpicReference());
             currentEpic.deleteSubtask(subtask);
@@ -105,7 +96,7 @@ public class TaskManager {
     }
 
     public void deleteEpicByID(int taskID) {
-        if (taskDatabase.epics.containsKey(taskID)) {
+        if (this.isEpicExists(taskID)) {
             for (Subtask subtask: taskDatabase.epics.get(taskID).getSubtaskReferences()) {
                 taskDatabase.subtasks.remove(subtask.getID());
             }
@@ -114,7 +105,7 @@ public class TaskManager {
     }
 
     public ArrayList<Subtask> getEpicsSubtasks(int taskID) {
-        if (taskDatabase.epics.containsKey(taskID)) {
+        if (this.isEpicExists(taskID)) {
             return taskDatabase.epics.get(taskID).getSubtaskReferences();
         }
         return null;
