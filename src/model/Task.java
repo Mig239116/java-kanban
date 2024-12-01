@@ -1,3 +1,5 @@
+package model;
+
 public class Task {
     private String title;
     private String description;
@@ -61,7 +63,7 @@ public class Task {
     }
 
     public String toString() {
-        return "Task { title= " + title + ",\n description= " + description + ",\n taskID= "
+        return "model.Task { title= " + title + ",\n description= " + description + ",\n taskID= "
                 + taskID + ",\n status=" + status + "}\n";
     }
 }

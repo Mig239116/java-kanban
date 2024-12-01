@@ -1,7 +1,8 @@
+import model.Epic;
+import model.Subtask;
+import model.TaskStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class SubtaskTest {
 
@@ -15,7 +16,7 @@ class SubtaskTest {
 
     @Test
     public void cannotAddAsOwnEpic() {
-        Subtask subtask = new Subtask(1, "Subtask", "First subtask", TaskStatus.DONE, 1);
+        Subtask subtask = new Subtask(1, "model.Subtask", "First subtask", TaskStatus.DONE, 1);
         Epic epic = new Epic(subtask.getID(), subtask.getTitle(), subtask.getDescription());
         epic.addSubtask(subtask);
         Assertions.assertTrue(epic.getSubtaskReferences().isEmpty());

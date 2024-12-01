@@ -1,3 +1,9 @@
+package manager;
+
+import model.Epic;
+import model.Subtask;
+import model.Task;
+
 import java.util.ArrayList;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -164,7 +170,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
     @Override
     public ArrayList<Task> getHistory() {
-        return historyManager.getHistory();
+        return new ArrayList<>(historyManager.getHistory());
     }
 
 

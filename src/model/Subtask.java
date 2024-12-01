@@ -1,3 +1,5 @@
+package model;
+
 public class Subtask extends Task{
     private Integer epicReference;
 
@@ -16,7 +18,7 @@ public class Subtask extends Task{
     }
 
     public String toString() {
-        return "Subtask { title= " + getTitle() + ",\n description= " + getDescription() + ",\n taskID= "
+        return "model.Subtask { title= " + getTitle() + ",\n description= " + getDescription() + ",\n taskID= "
                 + getID() + ",\n status=" + getStatus() + ",\n epicRef=" + epicReference + "}\n";
     }
 }

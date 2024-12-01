@@ -1,3 +1,8 @@
+import manager.HistoryManager;
+import manager.Managers;
+import manager.TaskManager;
+import model.Task;
+import model.TaskStatus;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

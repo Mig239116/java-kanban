@@ -1,3 +1,8 @@
+import manager.InMemoryTaskManager;
+import model.Epic;
+import model.Subtask;
+import model.Task;
+import model.TaskStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
@@ -12,7 +17,7 @@ class InMemoryTaskManagerTest {
     }
     @Test
     public void shouldCreateTask() {
-        Task originalTask = new Task("Task", "Task" , TaskStatus.NEW);
+        Task originalTask = new Task("model.Task", "model.Task" , TaskStatus.NEW);
         manager.createTask(originalTask);
         final ArrayList<Task> tasks = manager.getAllTasks();
         assertNotNull(tasks, "Не создан список задач");
@@ -22,14 +27,14 @@ class InMemoryTaskManagerTest {
         assertNotNull(task, "Задача не существует");
         assertEquals(originalTask, task, "Задачи не совпадают");
         assertEquals(1, task.getID(), "Номер задачи не существует");
-        assertEquals("Task", task.getTitle(), "Название задачи неверное");
-        assertEquals("Task", task.getDescription(), "Описание задачи неверное");
+        assertEquals("model.Task", task.getTitle(), "Название задачи неверное");
+        assertEquals("model.Task", task.getDescription(), "Описание задачи неверное");
         assertEquals(TaskStatus.NEW, task.getStatus(), "Статус задачи неверный");
     }
 
     @Test
     public void shouldCreateEpic() {
-        Epic originalEpic = new Epic("Task", "Task");
+        Epic originalEpic = new Epic("model.Task", "model.Task");
         manager.createEpic(originalEpic);
         final ArrayList<Epic> epics = manager.getAllEpics();
         assertNotNull(epics, "Не создан список задач");
@@ -39,16 +44,16 @@ class InMemoryTaskManagerTest {
         assertNotNull(epic, "Задача не существует");
         assertEquals(originalEpic, epic, "Задачи не совпадают");
         assertEquals(1, epic.getID(), "Номер задачи не существует");
-        assertEquals("Task", epic.getTitle(), "Название задачи неверное");
-        assertEquals("Task", epic.getDescription(), "Описание задачи неверное");
+        assertEquals("model.Task", epic.getTitle(), "Название задачи неверное");
+        assertEquals("model.Task", epic.getDescription(), "Описание задачи неверное");
         assertEquals(TaskStatus.NEW, epic.getStatus(), "Статус задачи неверный");
     }
 
     @Test
     public void shouldCreateSubtask() {
-        manager.createEpic(new Epic("Task", "Task"));
-        Subtask originalSubtask = new Subtask("Task",
-                "Task",
+        manager.createEpic(new Epic("model.Task", "model.Task"));
+        Subtask originalSubtask = new Subtask("model.Task",
+                "model.Task",
                 TaskStatus.NEW,
                 1);
         manager.createSubtask(originalSubtask);
@@ -60,8 +65,8 @@ class InMemoryTaskManagerTest {
         assertNotNull(subtask, "Задача не существует");
         assertEquals(originalSubtask, subtask, "Задачи не совпадают");
         assertEquals(2, subtask.getID(), "Номер задачи не существует");
-        assertEquals("Task", subtask.getTitle(), "Название задачи неверное");
-        assertEquals("Task", subtask.getDescription(), "Описание задачи неверное");
+        assertEquals("model.Task", subtask.getTitle(), "Название задачи неверное");
+        assertEquals("model.Task", subtask.getDescription(), "Описание задачи неверное");
         assertEquals(TaskStatus.NEW, subtask.getStatus(), "Статус задачи неверный");
     }
 
@@ -70,7 +75,7 @@ class InMemoryTaskManagerTest {
         Task task1 = new Task("Task1", "Task1", TaskStatus.NEW);
         Task task2 = new Task(1,
                 "Manual task",
-                "Manual Task",
+                "Manual model.Task",
                 TaskStatus.NEW);
         manager.createTask(task1);
         manager.createTask(task2);
@@ -121,15 +126,15 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void shouldBeOldVersionOfTaskInHistoryManager() {
-        Task task = new Task("Task", "Task", TaskStatus.NEW);
+        Task task = new Task("model.Task", "model.Task", TaskStatus.NEW);
         manager.createTask(task);
         Task savedTask = manager.getTaskById(1);
         Task savedInHistoryTask = manager.getHistory().get(0);
         manager.updateTask(new Task(1,"Updated", "Updated", TaskStatus.DONE));
-        assertEquals("Task",
+        assertEquals("model.Task",
                 savedInHistoryTask.getTitle(),
                 "Неверное название задачи");
-        assertEquals("Task",
+        assertEquals("model.Task",
                 savedInHistoryTask.getDescription(),
                 "Неверное описание задачи");
         assertEquals(TaskStatus.NEW,

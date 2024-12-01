@@ -1,3 +1,5 @@
+package model;
+
 import java.util.ArrayList;
 
 public class Epic extends Task {
@@ -70,7 +72,7 @@ public class Epic extends Task {
     }
 
     public String toString() {
-        return "Epic { title= " + getTitle() + ",\n description= " + getDescription() + ",\n taskID= "
+        return "model.Epic { title= " + getTitle() + ",\n description= " + getDescription() + ",\n taskID= "
                 + getID() + ",\n status=" + getStatus() + ",\n subtasks=" + subtaskReferences + "}\n";
     }
 }
