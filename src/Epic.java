@@ -32,7 +32,9 @@ public class Epic extends Task {
     }
 
     public void addSubtask(Subtask subtask) {
-         subtaskReferences.add(subtask);
+         if (this.getID() != subtask.getID()) {
+             subtaskReferences.add(subtask);
+         }
     }
 
     public void deleteSubtask(Subtask subtask) {
