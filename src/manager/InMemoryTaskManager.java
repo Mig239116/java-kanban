@@ -107,7 +107,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteSubtaskByID(int taskID) {
         if (this.isSubtaskExists(taskID)) {
             Subtask subtask = taskDatabase.subtasks.get(taskID);
-            Epic currentEpic =taskDatabase.epics.get(subtask.getEpicReference());
+            Epic currentEpic = taskDatabase.epics.get(subtask.getEpicReference());
             currentEpic.deleteSubtask(subtask);
             currentEpic.updateStatus();
             taskDatabase.subtasks.remove(taskID);
@@ -123,6 +123,7 @@ public class InMemoryTaskManager implements TaskManager {
             taskDatabase.epics.remove(taskID);
         }
     }
+
     @Override
     public ArrayList<Subtask> getEpicsSubtasks(int taskID) {
         if (this.isEpicExists(taskID)) {
@@ -168,6 +169,7 @@ public class InMemoryTaskManager implements TaskManager {
         historyManager.add(taskDatabase.epics.get(taskID));
         return taskDatabase.epics.get(taskID);
     }
+
     @Override
     public ArrayList<Task> getHistory() {
         return new ArrayList<>(historyManager.getHistory());
