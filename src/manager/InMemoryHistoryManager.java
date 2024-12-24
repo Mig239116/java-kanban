@@ -11,7 +11,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     private Node<Task> head;
     private Node<Task> tail;
 
-    class Node<E>  {
+    class Node<E> {
         public E data;
         public Node<E> prev;
         public Node<E> next;
@@ -61,7 +61,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         node.data = null;
     }
 
-    private void getTasks(){
+    private void getTasks() {
         tasks.clear();
         for (Node<Task> node: taskTracker.values()) {
             tasks.add(node.data);
