@@ -1,6 +1,6 @@
 package model;
 
-public class Subtask extends Task{
+public class Subtask extends Task {
     private Integer epicReference;
 
     public Subtask(String title, String description, TaskStatus status, Integer epicReference) {
