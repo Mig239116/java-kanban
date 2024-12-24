@@ -4,7 +4,6 @@ import model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.NoSuchElementException;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private ArrayList<Task> tasks;
@@ -12,12 +11,12 @@ public class InMemoryHistoryManager implements HistoryManager {
     private Node<Task> head;
     private Node<Task> tail;
 
-    class Node<Task>  {
-        public Task data;
-        public Node<Task> prev;
-        public Node<Task> next;
+    class Node<E>  {
+        public E data;
+        public Node<E> prev;
+        public Node<E> next;
 
-        public Node(Node<Task> prev, Task data, Node<Task> next) {
+        public Node(Node<E> prev, E data, Node<E> next) {
             this.data = data;
             this.prev = prev;
             this.next = next;
