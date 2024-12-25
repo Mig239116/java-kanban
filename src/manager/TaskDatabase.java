@@ -12,7 +12,7 @@ public class TaskDatabase {
     protected Map<Integer, Subtask> subtasks;
     protected Map<Integer, Epic> epics;
 
-    public TaskDatabase(){
+    public TaskDatabase() {
         tasks = new HashMap<>();
         subtasks = new HashMap<>();
         epics = new HashMap<>();
