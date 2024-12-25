@@ -100,7 +100,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTaskByID(int taskID) {
-        if (taskDatabase.tasks.containsKey(taskID)) taskDatabase.tasks.remove(taskID);
+        if (taskDatabase.tasks.containsKey(taskID)) {
+            historyManager.remove(taskID);
+            taskDatabase.tasks.remove(taskID);
+        }
     }
 
     @Override
@@ -110,6 +113,7 @@ public class InMemoryTaskManager implements TaskManager {
             Epic currentEpic = taskDatabase.epics.get(subtask.getEpicReference());
             currentEpic.deleteSubtask(subtask);
             currentEpic.updateStatus();
+            historyManager.remove(taskID);
             taskDatabase.subtasks.remove(taskID);
         }
     }
@@ -118,8 +122,10 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteEpicByID(int taskID) {
         if (this.isEpicExists(taskID)) {
             for (Subtask subtask: taskDatabase.epics.get(taskID).getSubtaskReferences()) {
+                historyManager.remove(subtask.getID());
                 taskDatabase.subtasks.remove(subtask.getID());
             }
+            historyManager.remove(taskID);
             taskDatabase.epics.remove(taskID);
         }
     }
@@ -134,6 +140,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllTasks() {
+        for (Integer id: taskDatabase.tasks.keySet()) {
+            historyManager.remove(id);
+        }
         taskDatabase.tasks.clear();
     }
 
@@ -143,11 +152,20 @@ public class InMemoryTaskManager implements TaskManager {
             epic.clearAllSubtasks();
             epic.updateStatus();
         }
+        for (Integer id: taskDatabase.subtasks.keySet()) {
+            historyManager.remove(id);
+        }
         taskDatabase.subtasks.clear();
     }
 
     @Override
     public void deleteAllEpics() {
+        for (Integer id: taskDatabase.subtasks.keySet()) {
+            historyManager.remove(id);
+        }
+        for (Integer id: taskDatabase.epics.keySet()) {
+            historyManager.remove(id);
+        }
         taskDatabase.epics.clear();
         taskDatabase.subtasks.clear();
     }

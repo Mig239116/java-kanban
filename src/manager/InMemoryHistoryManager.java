@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private ArrayList<Task> tasks;
     private HashMap<Integer, Node<Task>> taskTracker;
     private Node<Task> head;
     private Node<Task> tail;
@@ -24,7 +23,6 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     public InMemoryHistoryManager() {
-        tasks = new ArrayList<>();
         taskTracker = new HashMap<>();
     }
 
@@ -56,37 +54,34 @@ public class InMemoryHistoryManager implements HistoryManager {
             previousNode.next = nextNode;
             nextNode.prev = previousNode;
         }
-        node.prev = null;
-        node.next = null;
-        node.data = null;
+
     }
 
-    private void getTasks() {
-        tasks.clear();
+    private ArrayList<Task> getTasks() {
+        ArrayList<Task> tasks = new ArrayList<>();
         for (Node<Task> node: taskTracker.values()) {
             tasks.add(node.data);
         }
+        return tasks;
     }
 
     @Override
     public ArrayList<Task> getHistory() {
-        getTasks();
-        return new ArrayList<>(tasks);
+        return getTasks();
     }
 
     @Override
     public void add(Task task) {
-        if (taskTracker.containsKey(task.getID())) {
-            removeNode(taskTracker.get(task.getID()));
-            remove(task.getID());
-        }
+        remove(task.getID());
         taskTracker.put(task.getID(), linkLast(task));
-
     }
 
     @Override
     public void remove(int id) {
-        taskTracker.remove(id);
+        if (taskTracker.containsKey(id)) {
+            removeNode(taskTracker.get(id));
+            taskTracker.remove(id);
+        }
     }
 
 }
