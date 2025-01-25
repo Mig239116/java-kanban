@@ -7,9 +7,9 @@ import model.Task;
 import java.util.ArrayList;
 
 public class InMemoryTaskManager implements TaskManager {
-    private int tasksCounter;
-    private TaskDatabase taskDatabase;
-    private HistoryManager historyManager;
+    protected int tasksCounter;
+    protected TaskDatabase taskDatabase;
+    protected HistoryManager historyManager;
 
     public InMemoryTaskManager() {
         tasksCounter = 0;
@@ -32,15 +32,15 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(taskDatabase.epics.values());
     }
 
-    private boolean isEpicExists(int taskID) {
+    protected boolean isEpicExists(int taskID) {
         return taskDatabase.epics.containsKey(taskID);
     }
 
-    private boolean isSubtaskExists(int taskID) {
+    protected boolean isSubtaskExists(int taskID) {
         return taskDatabase.subtasks.containsKey(taskID);
     }
 
-    private boolean isSubtaskEpicReferenceValid(Subtask newSubtask) {
+    protected boolean isSubtaskEpicReferenceValid(Subtask newSubtask) {
         Subtask existingSubtask = taskDatabase.subtasks.get(newSubtask.getID());
         return existingSubtask.getEpicReference() == newSubtask.getEpicReference();
     }

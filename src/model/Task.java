@@ -66,4 +66,35 @@ public class Task {
         return "model.Task { title= " + title + ",\n description= " + description + ",\n taskID= "
                 + taskID + ",\n status=" + status + "}\n";
     }
+
+    public String toLine() {
+        return String.join(",",
+                Integer.toString(getID()),
+                TaskType.TASK.toString(),
+                getTitle(),
+                getStatus().toString(),
+                getDescription(),
+                "");
+    }
+
+    static public Task fromLine(String taskText) {
+        String[] taskFields = taskText.split(",");
+        TaskStatus taskStatus;
+        switch (taskFields[3]) {
+            case "NEW":
+                taskStatus = TaskStatus.NEW;
+                break;
+            case "DONE":
+                taskStatus = TaskStatus.DONE;
+                break;
+            default:
+                taskStatus = TaskStatus.IN_PROGRESS;
+                break;
+        }
+        return new Task(Integer.parseInt(taskFields[0]),
+                taskFields[2],
+                taskFields[4],
+                taskStatus
+                );
+    }
 }

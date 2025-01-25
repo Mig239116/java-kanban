@@ -75,4 +75,22 @@ public class Epic extends Task {
         return "model.Epic { title= " + getTitle() + ",\n description= " + getDescription() + ",\n taskID= "
                 + getID() + ",\n status=" + getStatus() + ",\n subtasks=" + subtaskReferences + "}\n";
     }
+
+    public String toLine() {
+        return String.join(",",
+                Integer.toString(getID()),
+                TaskType.EPIC.toString(),
+                getTitle(),
+                getStatus().toString(),
+                getDescription(),
+                "");
+    }
+
+    static public Epic fromLine(String taskText) {
+        String[] taskFields = taskText.split(",");
+        return new Epic(Integer.parseInt(taskFields[0]),
+                taskFields[2],
+                taskFields[4]
+        );
+    }
 }
