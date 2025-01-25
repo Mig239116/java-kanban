@@ -1,12 +1,9 @@
 import manager.FileBackedTaskManager;
-import manager.ManagerSaveException;
-import manager.Managers;
 import manager.TaskManager;
 import model.Epic;
 import model.Subtask;
 import model.Task;
 import model.TaskStatus;
-import model.TaskType;
 
 import java.io.File;
 
@@ -16,9 +13,9 @@ public class Main {
 
        FileBackedTaskManager taskManager =
                 new FileBackedTaskManager(
-                System.getProperty("user.home")+"/checkFile.csv");
+                System.getProperty("user.home") + "/checkFile.csv");
         createAllTasks(taskManager);
-        File sourceFile = new File(System.getProperty("user.home")+"/checkFile.csv");
+        File sourceFile = new File(System.getProperty("user.home") + "/checkFile.csv");
         FileBackedTaskManager taskManager1 = FileBackedTaskManager.loadFromFile(sourceFile);
         taskManager1.createTask(new Task(
                         "Проверка счетчика задач",
