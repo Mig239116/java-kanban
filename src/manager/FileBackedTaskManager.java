@@ -6,9 +6,6 @@ import model.Task;
 import model.TaskType;
 
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.Files;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
 
@@ -19,6 +16,7 @@ private File autoSaveFile;
         super();
         autoSaveFile = new File(fileFullPath);
     }
+
     public File getAutoSaveFile() {
         return autoSaveFile;
     }
@@ -31,7 +29,7 @@ private File autoSaveFile;
             return;
         }
         try(BufferedWriter bufferedWriter =
-                    new BufferedWriter(new FileWriter(autoSaveFile.toString()))){
+                    new BufferedWriter(new FileWriter(autoSaveFile.toString()))) {
             bufferedWriter.write(fieldsNames);
             bufferedWriter.newLine();
             for (Task task: taskDatabase.tasks.values()) {
@@ -51,7 +49,7 @@ private File autoSaveFile;
         }
     }
 
-    static public  FileBackedTaskManager loadFromFile(File file) {
+    public static  FileBackedTaskManager loadFromFile(File file) {
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file.toString());
         String workingLine;
         if (file.length() == 0 || !file.exists()) return null;
