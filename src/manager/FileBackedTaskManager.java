@@ -53,7 +53,7 @@ private File autoSaveFile;
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file.toString());
         String workingLine;
         if (file.length() == 0 || !file.exists()) return null;
-        try (BufferedReader bufferedReader =
+        try(BufferedReader bufferedReader =
                      new BufferedReader(new FileReader(file.toString()))) {
             bufferedReader.readLine();
             fileBackedTaskManager.tasksCounter = 0;
