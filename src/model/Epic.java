@@ -86,7 +86,7 @@ public class Epic extends Task {
                 "");
     }
 
-    static public Epic fromLine(String taskText) {
+    public static Epic fromLine(String taskText) {
         String[] taskFields = taskText.split(",");
         return new Epic(Integer.parseInt(taskFields[0]),
                 taskFields[2],

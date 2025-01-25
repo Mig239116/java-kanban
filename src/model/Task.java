@@ -77,7 +77,7 @@ public class Task {
                 "");
     }
 
-    static public Task fromLine(String taskText) {
+    public static Task fromLine(String taskText) {
         String[] taskFields = taskText.split(",");
         TaskStatus taskStatus;
         switch (taskFields[3]) {

@@ -32,7 +32,7 @@ public class Subtask extends Task {
                 Integer.toString(getEpicReference()));
     }
 
-    static public Subtask fromLine(String taskText) {
+    public static Subtask fromLine(String taskText) {
         String[] taskFields = taskText.split(",");
         TaskStatus taskStatus;
         switch (taskFields[3]) {
