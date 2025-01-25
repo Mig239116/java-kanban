@@ -28,7 +28,7 @@ private File autoSaveFile;
         ) {
             return;
         }
-        try(BufferedWriter bufferedWriter =
+        try (BufferedWriter bufferedWriter =
                     new BufferedWriter(new FileWriter(autoSaveFile.toString()))) {
             bufferedWriter.write(fieldsNames);
             bufferedWriter.newLine();
@@ -53,7 +53,7 @@ private File autoSaveFile;
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file.toString());
         String workingLine;
         if (file.length() == 0 || !file.exists()) return null;
-        try(BufferedReader bufferedReader =
+        try (BufferedReader bufferedReader =
                      new BufferedReader(new FileReader(file.toString()))) {
             bufferedReader.readLine();
             fileBackedTaskManager.tasksCounter = 0;
