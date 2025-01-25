@@ -230,55 +230,82 @@ class InMemoryTaskManagerTest {
     @Test
     public void shouldDeleteTaskById() {
         manager.createTask(new Task("Title", "Description", TaskStatus.DONE));
+        manager.getTaskById(1);
+        ArrayList<Task> history = manager.getHistory();
+        assertEquals(1, history.size());
         manager.deleteTaskByID(manager.getTaskById(1).getID());
         ArrayList<Task> tasks = manager.getAllTasks();
+        history = manager.getHistory();
         assertNotNull(tasks);
-        assertTrue(tasks.isEmpty());
+        assertTrue(tasks.isEmpty(), "Задача не удалена");
+        assertTrue(history.isEmpty(), "Задача не удалена из истории просмотров");
     }
 
     @Test
     public void shouldDeleteEpicById() {
         manager.createEpic(new Epic("Title", "Description"));
+        manager.getEpicById(1);
+        ArrayList<Task> history = manager.getHistory();
+        assertEquals(1, history.size());
         manager.deleteEpicByID(manager.getEpicById(1).getID());
         ArrayList<Epic> epics = manager.getAllEpics();
+        history = manager.getHistory();
         assertNotNull(epics);
-        assertTrue(epics.isEmpty());
+        assertTrue(epics.isEmpty(), "Эпик не удален");
+        assertTrue(history.isEmpty(), "Эпик не удален из истории просмотров");
     }
 
     @Test
     public void shouldDeleteSubtaskById() {
         manager.createEpic(new Epic("Title", "Description"));
         manager.createSubtask(new Subtask("Title", "Description", TaskStatus.DONE, 1));
+        manager.getSubtaskById(2);
+        ArrayList<Task> history = manager.getHistory();
+        assertEquals(1, history.size());
         manager.deleteSubtaskByID(manager.getSubtaskById(2).getID());
         ArrayList<Subtask> subtasks = manager.getAllSubtasks();
+        history = manager.getHistory();
         assertNotNull(subtasks);
-        assertTrue(subtasks.isEmpty());
+        assertTrue(subtasks.isEmpty(), "Подзадача не удалена");
+        assertTrue(history.isEmpty(), "Подзадача не удалена из истории просмотров");
     }
 
     @Test
     public void shouldDeleteAllTasks() {
         manager.createTask(new Task("Title", "Description", TaskStatus.DONE));
         manager.createTask(new Task("Title1", "Description1", TaskStatus.DONE));
+        manager.getTaskById(1);
+        manager.getTaskById(2);
+        ArrayList<Task> history = manager.getHistory();
+        assertEquals(2, history.size());
         ArrayList<Task> tasks = manager.getAllTasks();
         assertNotNull(tasks);
         assertEquals(2, tasks.size());
         manager.deleteAllTasks();
+        history = manager.getHistory();
         tasks = manager.getAllTasks();
         assertNotNull(tasks);
         assertTrue(tasks.isEmpty());
+        assertTrue(history.isEmpty());
     }
 
     @Test
     public void shouldDeleteAllEpics() {
         manager.createEpic(new Epic("Title", "Description"));
         manager.createEpic(new Epic("Title", "Description"));
+        manager.getEpicById(1);
+        manager.getEpicById(2);
+        ArrayList<Task> history = manager.getHistory();
+        assertEquals(2, history.size());
         ArrayList<Epic> epics = manager.getAllEpics();
         assertNotNull(epics);
         assertEquals(2, epics.size());
         manager.deleteAllEpics();
         epics = manager.getAllEpics();
+        history = manager.getHistory();
         assertNotNull(epics);
         assertTrue(epics.isEmpty());
+        assertTrue(history.isEmpty());
     }
 
     @Test
@@ -286,12 +313,18 @@ class InMemoryTaskManagerTest {
         manager.createEpic(new Epic("Title", "Description"));
         manager.createSubtask(new Subtask("Title", "Description", TaskStatus.DONE, 1));
         manager.createSubtask(new Subtask("Title", "Description", TaskStatus.DONE, 1));
+        manager.getSubtaskById(2);
+        manager.getSubtaskById(3);
+        ArrayList<Task> history = manager.getHistory();
+        assertEquals(2, history.size());
         ArrayList<Subtask> subtasks = manager.getAllSubtasks();
         assertNotNull(subtasks);
         assertEquals(2, subtasks.size());
         manager.deleteAllSubtasks();
         subtasks = manager.getAllSubtasks();
+        history = manager.getHistory();
         assertNotNull(subtasks);
         assertTrue(subtasks.isEmpty());
+        assertTrue(history.isEmpty());
     }
 }
