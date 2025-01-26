@@ -30,7 +30,7 @@ private File autoSaveFile;
         ) {
             if (autoSaveFile.exists()) {
                 autoSaveFile.delete();
-            };
+            }
             return;
         }
         try (BufferedWriter bufferedWriter =
