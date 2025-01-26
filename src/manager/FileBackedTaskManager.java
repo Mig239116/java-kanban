@@ -1,5 +1,7 @@
 package manager;
 
+import exceptions.ManagerLoadException;
+import exceptions.ManagerSaveException;
 import model.Epic;
 import model.Subtask;
 import model.Task;
@@ -21,11 +23,14 @@ private File autoSaveFile;
         return autoSaveFile;
     }
 
-    public void save() {
+    private void save() {
         if (taskDatabase.tasks.isEmpty() &
                 taskDatabase.subtasks.isEmpty() &
                 taskDatabase.epics.isEmpty()
         ) {
+            if (autoSaveFile.exists()) {
+                autoSaveFile.delete();
+            };
             return;
         }
         try (BufferedWriter bufferedWriter =
@@ -94,7 +99,7 @@ private File autoSaveFile;
                     }
                 }
         } catch (IOException exception) {
-            throw new ManagerLoadException();
+            throw new ManagerLoadException("Ошиибка выгрузки из файла: " + file.getName());
         }
         return fileBackedTaskManager;
     }

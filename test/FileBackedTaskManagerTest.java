@@ -1,6 +1,4 @@
 import manager.FileBackedTaskManager;
-import manager.InMemoryTaskManager;
-import manager.ManagerSaveException;
 import model.Epic;
 import model.Subtask;
 import model.Task;
@@ -11,7 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,7 +27,8 @@ class FileBackedTaskManagerTest {
 
     @Test
     public void shouldNotCreateFileIfNoData() {
-        manager.save();
+        manager.createTask(new Task("model.Task", "model.Task" , TaskStatus.NEW));
+        manager.deleteTaskByID(1);
         File file = manager.getAutoSaveFile();
         assertFalse(file.exists(), "Создан пустой файл");
     }
