@@ -1,4 +1,5 @@
 import manager.FileBackedTaskManager;
+import manager.InMemoryTaskManager;
 import model.Epic;
 import model.Subtask;
 import model.Task;
@@ -12,24 +13,26 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTaskManagerTest {
-  private FileBackedTaskManager manager;
+class FileBackedTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
+  private FileBackedTaskManager taskManager;
     @BeforeEach
     public void beforeEach() {
-            manager = new FileBackedTaskManager(
+            taskManager = new FileBackedTaskManager(
                     new File(System.getProperty("user.home")+"/checkFile.csv").toString());
+            manager = new InMemoryTaskManager();
     }
 
     @AfterEach
     public void afterEach() {
-        manager.getAutoSaveFile().delete();
+        taskManager.getAutoSaveFile().delete();
     }
 
     @Test
     public void shouldNotCreateFileIfNoData() {
-        manager.createTask(new Task("model.Task", "model.Task" , TaskStatus.NEW));
-        manager.deleteTaskByID(1);
-        File file = manager.getAutoSaveFile();
+        taskManager.createTask(new Task("model.Task", "model.Task" , TaskStatus.NEW,
+                30, "01.02.1998 14:28"));
+        taskManager.deleteTaskByID(1);
+        File file = taskManager.getAutoSaveFile();
         assertFalse(file.exists(), "Создан пустой файл");
     }
 
@@ -46,19 +49,22 @@ class FileBackedTaskManagerTest {
 
     @Test
     public void shouldCreateAndSaveDifferentTasks() {
-        Task originalTask = new Task("model.Task", "model.Task" , TaskStatus.NEW);
-        manager.createTask(originalTask);
+        Task originalTask = new Task("model.Task", "model.Task" , TaskStatus.NEW,
+                30, "01.02.1998 14:28");
+        taskManager.createTask(originalTask);
         Epic originalEpic = new Epic("model.Task", "model.Task");
-        manager.createEpic(originalEpic);
+        taskManager.createEpic(originalEpic);
         Subtask originalSubtask = new Subtask("model.Task",
                 "model.Task",
                 TaskStatus.NEW,
+                45,
+                "01.03.1998 14:28",
                 2);
-        manager.createSubtask(originalSubtask);
-        Task task = manager.getTaskById(1);
-        Epic epic = manager.getEpicById(2);
-        Subtask subtask = manager.getSubtaskById(3);
-        FileBackedTaskManager newManager = FileBackedTaskManager.loadFromFile(manager.getAutoSaveFile());
+        taskManager.createSubtask(originalSubtask);
+        Task task = taskManager.getTaskById(1);
+        Epic epic = taskManager.getEpicById(2);
+        Subtask subtask = taskManager.getSubtaskById(3);
+        FileBackedTaskManager newManager = FileBackedTaskManager.loadFromFile(taskManager.getAutoSaveFile());
         Task newTask = newManager.getTaskById(1);
         Epic newEpic = newManager.getEpicById(2);
         Subtask newSubtask = newManager.getSubtaskById(3);

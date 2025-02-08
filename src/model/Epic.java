@@ -1,17 +1,19 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Epic extends Task {
      private ArrayList<Subtask> subtaskReferences;
 
      public Epic(String title, String description) {
-         super(title, description, TaskStatus.NEW);
+         super(title, description, TaskStatus.NEW, 0, "01.01.1900 00:00");
          subtaskReferences = new ArrayList<>();
      }
 
     public Epic(int taskID, String title, String description) {
-        super(taskID, title, description, TaskStatus.NEW);
+        super(taskID, title, description, TaskStatus.NEW, 0, "01.01.1900 00:00");
         subtaskReferences = new ArrayList<>();
     }
 
@@ -47,6 +49,43 @@ public class Epic extends Task {
          subtaskReferences.set(subtaskReferences.indexOf(oldSubtask), newSubtask);
     }
 
+    @Override
+    public LocalDateTime getEndTime() {
+        return this.getStartTime().plusMinutes(getDurationNumeric());
+    }
+
+    @Override
+    public String getEndTimeText() {
+        return getEndTime().format(getFormatter());
+    }
+
+    public void updateDuration() {
+        if (subtaskReferences.isEmpty())  {
+            this.setDuration(0);
+            return;
+        }
+        int accumulatedDuration = 0;
+
+        for (Subtask subtask: subtaskReferences) {
+            accumulatedDuration = accumulatedDuration + subtask.getDurationNumeric();
+        }
+        this.setDuration(accumulatedDuration);
+    }
+
+    public void updateStartTime() {
+        if (subtaskReferences.isEmpty())  {
+            this.setStartTime("01.01.1900 00:00");
+            return;
+        }
+        Subtask earliestSubtask = subtaskReferences.getFirst();
+        for (Subtask subtask: subtaskReferences) {
+            if (subtask.getStartTime().isBefore(earliestSubtask.getStartTime())) {
+                earliestSubtask = subtask;
+            }
+        }
+        this.setStartTime(earliestSubtask.getStartTime());
+    }
+
     public void updateStatus() {
          if (subtaskReferences.isEmpty())  {
              this.setStatus(TaskStatus.NEW);
@@ -73,7 +112,8 @@ public class Epic extends Task {
 
     public String toString() {
         return "model.Epic { title= " + getTitle() + ",\n description= " + getDescription() + ",\n taskID= "
-                + getID() + ",\n status=" + getStatus() + ",\n subtasks=" + subtaskReferences + "}\n";
+                + getID() + ",\n status=" + getStatus() + ",\n start time=" + getStartTimeText() + ",\n duration="
+                + getDurationNumeric() + ",\n subtasks=" + subtaskReferences + "}\n";
     }
 
     public String toLine() {
@@ -83,6 +123,8 @@ public class Epic extends Task {
                 getTitle(),
                 getStatus().toString(),
                 getDescription(),
+                getStartTimeText(),
+                Integer.toString(getDurationNumeric()),
                 "");
     }
 

@@ -22,7 +22,8 @@ class ManagersTest {
         assertTrue(taskManager.getHistory().isEmpty(), "История не пуста");
         assertTrue(taskManager.getAllTasks().isEmpty(), "Список задач не пуст");
         assertTrue(taskManager.getAllSubtasks().isEmpty(), "Список подзадач не пуст");
-        taskManager.createTask(new Task("task1", "task1", TaskStatus.NEW));
+        taskManager.createTask(new Task("task1", "task1", TaskStatus.NEW,
+                30, "05.09.2025 14:28"));
         assertEquals(1, taskManager.getTaskById(1).getID(),
                 "Генератор идентификаторов работает неверно");
     }

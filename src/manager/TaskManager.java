@@ -5,6 +5,8 @@ import model.Subtask;
 import model.Task;
 
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public interface TaskManager {
     List<Task> getAllTasks();
@@ -46,4 +48,10 @@ public interface TaskManager {
     List<Task> getHistory();
 
     List<Subtask> getEpicsSubtasks(int taskID);
+
+    Set<Task> getPrioritizedTasks();
+
+    boolean checkIntersections(Task task);
+
+    boolean ifStartTimeIsNull(Task task);
 }
