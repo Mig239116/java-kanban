@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class Task implements Comparable<Task>{
+public class Task implements Comparable<Task> {
     private String title;
     private String description;
     private int taskID;
@@ -65,9 +65,13 @@ public class Task implements Comparable<Task>{
         return status;
     }
 
-    public Duration getDuration() {return duration; }
+    public Duration getDuration() {
+        return duration;
+    }
 
-    public int getDurationNumeric() {return (int) duration.toMinutes(); }
+    public int getDurationNumeric() {
+        return (int) duration.toMinutes();
+    }
 
     public LocalDateTime getStartTime() {
         return startTime;
