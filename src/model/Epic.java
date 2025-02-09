@@ -63,7 +63,7 @@ public class Epic extends Task {
 
     @Override
     public String getEndTimeText() {
-        return (endTime == null)? null: endTime.format(getFormatter());
+        return (endTime == null) ? null : endTime.format(getFormatter());
     }
 
     public void updateDuration() {
@@ -87,8 +87,8 @@ public class Epic extends Task {
         Subtask latestSubtask = subtaskReferences.stream()
                 .filter(subtask -> subtask.getEndTime() != null)
                 .sorted((subtask1, subtask2) -> subtask1.getEndTime()
-                        .isBefore(subtask2.getEndTime())? -1: (subtask1.getEndTime()
-                        .isAfter(subtask2.getEndTime())? 1: 0))
+                        .isBefore(subtask2.getEndTime()) ? -1 : (subtask1.getEndTime()
+                        .isAfter(subtask2.getEndTime()) ? 1 : 0))
                 .sorted(Comparator.reverseOrder())
                 .findFirst()
                 .orElse(null);
@@ -108,8 +108,8 @@ public class Epic extends Task {
                 .stream()
                 .filter(subtask -> subtask.getStartTime() != null)
                 .sorted((subtask1, subtask2) -> subtask1.getStartTime()
-                        .isBefore(subtask2.getStartTime())? -1: (subtask1.getStartTime()
-                        .isAfter(subtask2.getStartTime())? 1: 0))
+                        .isBefore(subtask2.getStartTime()) ? -1 : (subtask1.getStartTime()
+                        .isAfter(subtask2.getStartTime()) ? 1 : 0))
                 .findFirst()
                 .orElse(null);
         if (earliestSubtask == null) {
@@ -157,7 +157,7 @@ public class Epic extends Task {
                 getStatus().toString(),
                 getDescription(),
                 getStartTimeText(),
-                (getDuration() == null)? Integer.toString(0): Integer.toString(getDurationNumeric()),
+                (getDuration() == null) ? Integer.toString(0) : Integer.toString(getDurationNumeric()),
                 "");
     }
 
