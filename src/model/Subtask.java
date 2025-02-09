@@ -33,7 +33,7 @@ public class Subtask extends Task {
                 getStatus().toString(),
                 getDescription(),
                 getStartTimeText(),
-                (getDuration() == null)? Integer.toString(0): Integer.toString(getDurationNumeric()),
+                (getDuration() == null) ? Integer.toString(0) : Integer.toString(getDurationNumeric()),
                 Integer.toString(getEpicReference()));
     }
 

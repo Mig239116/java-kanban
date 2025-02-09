@@ -78,7 +78,7 @@ public class Task implements Comparable<Task> {
     }
 
     public Integer getDurationNumeric() {
-        return (duration == null)? null: (int) duration.toMinutes();
+        return (duration == null) ? null : (int) duration.toMinutes();
     }
 
     public LocalDateTime getStartTime() {
@@ -86,15 +86,15 @@ public class Task implements Comparable<Task> {
     }
 
     public String getStartTimeText() {
-        return (startTime == null)? null: startTime.format(formatter);
+        return (startTime == null) ? null : startTime.format(formatter);
     }
 
     public LocalDateTime getEndTime() {
-        return (startTime == null)? null: startTime.plusMinutes(getDurationNumeric());
+        return (startTime == null) ? null : startTime.plusMinutes(getDurationNumeric());
     }
 
     public String getEndTimeText() {
-        return (startTime == null)? null: startTime.plusMinutes(getDurationNumeric()).format(formatter);
+        return (startTime == null) ? null : startTime.plusMinutes(getDurationNumeric()).format(formatter);
     }
 
     public DateTimeFormatter getFormatter() {
@@ -148,7 +148,7 @@ public class Task implements Comparable<Task> {
                 getStatus().toString(),
                 getDescription(),
                 getStartTimeText(),
-                (getDuration() == null)? Integer.toString(0): Integer.toString(getDurationNumeric()),
+                (getDuration() == null) ? Integer.toString(0) : Integer.toString(getDurationNumeric()),
                 "");
     }
 
