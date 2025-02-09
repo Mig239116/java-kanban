@@ -13,16 +13,24 @@ public class Task implements Comparable<Task> {
     private LocalDateTime startTime;
     private DateTimeFormatter formatter;
 
-    public Task(String title, String description, TaskStatus status, int duration, String startTime) {
+    public Task(String title, String description, TaskStatus status, Integer duration, String startTime) {
         this.title = title;
         this.description = description;
         this.status = status;
-        this.duration = Duration.ofMinutes(duration);
+        if (duration == null) {
+            this.duration = null;
+        } else {
+            this.duration = Duration.ofMinutes(duration);
+        }
         this.formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-        this.startTime = LocalDateTime.parse(startTime, this.formatter);
+        if (startTime == null) {
+            this.startTime = null;
+        } else {
+            this.startTime = LocalDateTime.parse(startTime, this.formatter);
+        }
     }
 
-    public Task(int taskID, String title, String description, TaskStatus status, int duration, String startTime) {
+    public Task(int taskID, String title, String description, TaskStatus status, Integer duration, String startTime) {
         this(title, description, status, duration, startTime);
         this.taskID = taskID;
     }
@@ -69,8 +77,8 @@ public class Task implements Comparable<Task> {
         return duration;
     }
 
-    public int getDurationNumeric() {
-        return (int) duration.toMinutes();
+    public Integer getDurationNumeric() {
+        return (duration == null)? null: (int) duration.toMinutes();
     }
 
     public LocalDateTime getStartTime() {
@@ -78,15 +86,15 @@ public class Task implements Comparable<Task> {
     }
 
     public String getStartTimeText() {
-        return startTime.format(formatter);
+        return (startTime == null)? null: startTime.format(formatter);
     }
 
     public LocalDateTime getEndTime() {
-        return startTime.plusMinutes(getDurationNumeric());
+        return (startTime == null)? null: startTime.plusMinutes(getDurationNumeric());
     }
 
     public String getEndTimeText() {
-        return startTime.plusMinutes(getDurationNumeric()).format(formatter);
+        return (startTime == null)? null: startTime.plusMinutes(getDurationNumeric()).format(formatter);
     }
 
     public DateTimeFormatter getFormatter() {
@@ -109,7 +117,7 @@ public class Task implements Comparable<Task> {
         this.description = description;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(Integer duration) {
         this.duration = Duration.ofMinutes(duration);
     }
 
@@ -117,9 +125,6 @@ public class Task implements Comparable<Task> {
         this.duration = duration;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = LocalDateTime.parse(startTime, formatter);
-    }
 
     public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
@@ -132,7 +137,7 @@ public class Task implements Comparable<Task> {
     public String toString() {
         return "model.Task { title= " + title + ",\n description= " + description + ",\n taskID= "
                 + taskID + ",\n status=" + status + ",\n start time=" + getStartTimeText() + ",\n duration="
-                + getDurationNumeric() + "}\n";
+                + getDurationNumeric() + ",\n end time=" + getEndTimeText()+ "}\n";
     }
 
     public String toLine() {
@@ -143,7 +148,7 @@ public class Task implements Comparable<Task> {
                 getStatus().toString(),
                 getDescription(),
                 getStartTimeText(),
-                Integer.toString(getDurationNumeric()),
+                (getDuration() == null)? Integer.toString(0): Integer.toString(getDurationNumeric()),
                 "");
     }
 

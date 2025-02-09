@@ -25,7 +25,6 @@ public class Main {
                         "08.02.2024 13:47"
                 )
         );
-        taskManager1.deleteAllSubtasks();
         printAllTasks(taskManager1);
     }
 
@@ -53,7 +52,7 @@ public class Main {
                         "Описание подзадачи 1",
                         TaskStatus.NEW,
                         90,
-                "11.03.2025 14:25",
+                "11.03.2028 14:25",
                         3
                 )
         );

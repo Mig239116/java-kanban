@@ -50,7 +50,5 @@ public interface TaskManager {
 
     Set<Task> getPrioritizedTasks();
 
-    boolean checkIntersections(Task task);
 
-    boolean ifStartTimeIsNull(Task task);
 }

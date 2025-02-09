@@ -4,13 +4,13 @@ public class Subtask extends Task {
     private Integer epicReference;
 
     public Subtask(String title, String description, TaskStatus status,
-                   int duration, String startTime, Integer epicReference) {
+                   Integer duration, String startTime, Integer epicReference) {
         super(title, description, status, duration, startTime);
         this.epicReference = epicReference;
     }
 
     public Subtask(int taskID, String title, String description, TaskStatus status,
-                   int duration, String startTime, Integer epicReference) {
+                   Integer duration, String startTime, Integer epicReference) {
         super(taskID, title, description, status, duration, startTime);
         this.epicReference = epicReference;
     }
@@ -22,7 +22,7 @@ public class Subtask extends Task {
     public String toString() {
         return "model.Subtask { title= " + getTitle() + ",\n description= " + getDescription() + ",\n taskID= "
                 + getID() + ",\n status=" + getStatus() + ",\n start time=" + getStartTimeText() + ",\n duration="
-                + getDurationNumeric() + ",\n epicRef=" + epicReference + "}\n";
+                + getDurationNumeric() + ",\n end time=" + getEndTimeText() + ",\n epicRef=" + epicReference + "}\n";
     }
 
     public String toLine() {
@@ -33,7 +33,7 @@ public class Subtask extends Task {
                 getStatus().toString(),
                 getDescription(),
                 getStartTimeText(),
-                Integer.toString(getDurationNumeric()),
+                (getDuration() == null)? Integer.toString(0): Integer.toString(getDurationNumeric()),
                 Integer.toString(getEpicReference()));
     }
 

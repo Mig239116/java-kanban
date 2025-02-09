@@ -98,6 +98,7 @@ private File autoSaveFile;
                         currentEpic.updateStatus();
                         currentEpic.updateStartTime();
                         currentEpic.updateDuration();
+                        currentEpic.updateEndTime();
                         fileBackedTaskManager.addOrDeletePrioritizedTask(subtask, true);
                     } else {
                         fileBackedTaskManager.taskDatabase.subtasks.remove(subtask.getID());

@@ -51,8 +51,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals("model.Task", epic.getTitle(), "Название задачи неверное");
         assertEquals("model.Task", epic.getDescription(), "Описание задачи неверное");
         assertEquals(TaskStatus.NEW, epic.getStatus(), "Статус задачи неверный");
-        assertEquals(0, epic.getDurationNumeric(), "Длительность задачи неверный");
-        assertEquals("01.01.1900 00:00", epic.getStartTimeText(), "Дата начала задачи неверный");
+        assertNull(epic.getDuration(), "Длительность задачи неверный");
+        assertNull(epic.getStartTimeText(), "Дата начала задачи неверный");
     }
 
     @Test
@@ -228,11 +228,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(TaskStatus.NEW,
                 updatedEpic.getStatus(),
                 "Неверный статус");
-        assertEquals(0,
-                updatedEpic.getDurationNumeric(),
+        assertEquals(null,
+                updatedEpic.getDuration(),
                 "Неверная длительность");
-        assertEquals("01.01.1900 00:00",
-                updatedEpic.getStartTimeText(),
+        assertEquals(null,
+                updatedEpic.getStartTime(),
                 "Неверная дата");
     }
     @Test
