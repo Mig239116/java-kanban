@@ -137,7 +137,7 @@ public class Task implements Comparable<Task> {
     public String toString() {
         return "model.Task { title= " + title + ",\n description= " + description + ",\n taskID= "
                 + taskID + ",\n status=" + status + ",\n start time=" + getStartTimeText() + ",\n duration="
-                + getDurationNumeric() + ",\n end time=" + getEndTimeText()+ "}\n";
+                + getDurationNumeric() + ",\n end time=" + getEndTimeText() + "}\n";
     }
 
     public String toLine() {
