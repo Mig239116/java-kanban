@@ -12,7 +12,7 @@ import java.io.*;
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
 
 private File autoSaveFile;
-    final String fieldsNames = "id,type,name,status,description,epic";
+    final String fieldsNames = "id,type,name,status,description,startTime,duration,epic";
 
     public FileBackedTaskManager(String fileFullPath) {
         super();
@@ -71,6 +71,7 @@ private File autoSaveFile;
                     }
                         fileBackedTaskManager.taskDatabase.subtasks.put(subtask.getID(),
                                 subtask);
+
                 } else if (workingLine.contains(TaskType.EPIC.toString())) {
                     Epic epic = Epic.fromLine(workingLine);
                     if (fileBackedTaskManager.tasksCounter < epic.getID()) {
@@ -85,6 +86,7 @@ private File autoSaveFile;
                     }
                     fileBackedTaskManager.taskDatabase.tasks.put(task.getID(),
                             task);
+                    fileBackedTaskManager.addOrDeletePrioritizedTask(task, true);
                 }
 
             }
@@ -94,6 +96,10 @@ private File autoSaveFile;
                         Epic currentEpic = fileBackedTaskManager.taskDatabase.epics.get(subtask.getEpicReference());
                         currentEpic.addSubtask(subtask);
                         currentEpic.updateStatus();
+                        currentEpic.updateStartTime();
+                        currentEpic.updateDuration();
+                        currentEpic.updateEndTime();
+                        fileBackedTaskManager.addOrDeletePrioritizedTask(subtask, true);
                     } else {
                         fileBackedTaskManager.taskDatabase.subtasks.remove(subtask.getID());
                     }
@@ -175,5 +181,6 @@ private File autoSaveFile;
         super.deleteAllEpics();
         save();
     }
+
 
 }

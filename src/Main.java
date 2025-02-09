@@ -20,24 +20,29 @@ public class Main {
         taskManager1.createTask(new Task(
                         "Проверка счетчика задач",
                         "Должен быть больше максимального ID",
-                        TaskStatus.NEW
+                        TaskStatus.NEW,
+                        30,
+                        "08.02.2024 13:47"
                 )
         );
         printAllTasks(taskManager1);
-
     }
 
     private static void createAllTasks(TaskManager taskManager) {
         taskManager.createTask(new Task(
                         "Простая задача 1",
                         "Описание простой задачи 1",
-                        TaskStatus.NEW
+                        TaskStatus.NEW,
+                        10,
+                        "04.05.1983 12:00"
                 )
         );
         taskManager.createTask(new Task(
                         "Простая задача 2",
                         "Описание простой задачи 2",
-                        TaskStatus.IN_PROGRESS
+                        TaskStatus.IN_PROGRESS,
+                        150,
+                        "11.03.2025 14:25"
                 )
         );
         taskManager.createEpic(new Epic("Эпик 1", "Описание эпика 1"));
@@ -46,6 +51,8 @@ public class Main {
                         "Подзадача 1",
                         "Описание подзадачи 1",
                         TaskStatus.NEW,
+                        90,
+                "11.03.2028 14:25",
                         3
                 )
         );
@@ -53,6 +60,8 @@ public class Main {
                         "Подзадача 2",
                         "Описание подзадачи 2",
                         TaskStatus.NEW,
+                10,
+                "10.03.2025 14:25",
                         3
                 )
         );
@@ -60,19 +69,25 @@ public class Main {
                         "Подзадача 3",
                         "Описание подзадачи 3",
                         TaskStatus.NEW,
+                35,
+                "11.04.2025 14:25",
                         4
                 )
         );
         taskManager.updateTask(new Task(1,
                         "Простая задача 1",
                         "Описание простой задачи 1",
-                        TaskStatus.DONE
+                        TaskStatus.DONE,
+                        21,
+                        "13.01.2026 13:47"
                 )
         );
         taskManager.updateTask(new Task(2,
                         "Простая задача 15",
                         "Описание простой задачи 15",
-                        TaskStatus.DONE
+                        TaskStatus.DONE,
+                137,
+                "13.01.2025 13:50"
                 )
         );
         taskManager.updateSubtask(new Subtask(
@@ -80,6 +95,8 @@ public class Main {
                         "Подзадача 3",
                         "Описание подзадачи 3",
                         TaskStatus.DONE,
+                35,
+                "11.04.2025 14:25",
                         4
                 )
         );
@@ -88,6 +105,8 @@ public class Main {
                         "Подзадача 1",
                         "Описание подзадачи 1",
                         TaskStatus.DONE,
+                10,
+                "10.03.2025 14:25",
                         3
                 )
         );
@@ -96,10 +115,13 @@ public class Main {
                         "Подзадача 2",
                         "Описание подзадачи 2",
                         TaskStatus.IN_PROGRESS,
+                90,
+                "11.03.2025 14:25",
                         3
                 )
         );
-
+        System.out.println("Приоритеты:");
+        System.out.println(taskManager.getPrioritizedTasks());
     }
 
     private static void printAllTasks(TaskManager manager) {
@@ -115,6 +137,9 @@ public class Main {
         for (Task subtask : manager.getAllSubtasks()) {
             System.out.println(manager.getSubtaskById(subtask.getID()));
         }
+        System.out.println("Приоритеты:");
+        System.out.println(manager.getPrioritizedTasks());
+
     }
 
 }

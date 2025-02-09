@@ -3,13 +3,15 @@ package model;
 public class Subtask extends Task {
     private Integer epicReference;
 
-    public Subtask(String title, String description, TaskStatus status, Integer epicReference) {
-        super(title, description, status);
+    public Subtask(String title, String description, TaskStatus status,
+                   Integer duration, String startTime, Integer epicReference) {
+        super(title, description, status, duration, startTime);
         this.epicReference = epicReference;
     }
 
-    public Subtask(int taskID, String title, String description, TaskStatus status, Integer epicReference) {
-        super(taskID, title, description, status);
+    public Subtask(int taskID, String title, String description, TaskStatus status,
+                   Integer duration, String startTime, Integer epicReference) {
+        super(taskID, title, description, status, duration, startTime);
         this.epicReference = epicReference;
     }
 
@@ -19,7 +21,8 @@ public class Subtask extends Task {
 
     public String toString() {
         return "model.Subtask { title= " + getTitle() + ",\n description= " + getDescription() + ",\n taskID= "
-                + getID() + ",\n status=" + getStatus() + ",\n epicRef=" + epicReference + "}\n";
+                + getID() + ",\n status=" + getStatus() + ",\n start time=" + getStartTimeText() + ",\n duration="
+                + getDurationNumeric() + ",\n end time=" + getEndTimeText() + ",\n epicRef=" + epicReference + "}\n";
     }
 
     public String toLine() {
@@ -29,6 +32,8 @@ public class Subtask extends Task {
                 getTitle(),
                 getStatus().toString(),
                 getDescription(),
+                getStartTimeText(),
+                (getDuration() == null) ? Integer.toString(0) : Integer.toString(getDurationNumeric()),
                 Integer.toString(getEpicReference()));
     }
 
@@ -50,7 +55,9 @@ public class Subtask extends Task {
                 taskFields[2],
                 taskFields[4],
                 taskStatus,
-                Integer.parseInt((taskFields[5]))
+                Integer.parseInt(taskFields[6]),
+                taskFields[5],
+                Integer.parseInt((taskFields[7]))
         );
     }
 }
