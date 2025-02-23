@@ -2,7 +2,6 @@ package support;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
-import model.Epic;
 
 public class EpicTestingExclusionStrategies implements ExclusionStrategy {
     @Override

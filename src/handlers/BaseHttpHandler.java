@@ -10,11 +10,9 @@ import manager.TaskManager;
 import support.EpicSpecificExclusionStrategies;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 public abstract class BaseHttpHandler implements HttpHandler {

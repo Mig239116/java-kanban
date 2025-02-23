@@ -5,7 +5,6 @@ import exceptions.IntersectionException;
 import exceptions.NotFoundException;
 import manager.TaskManager;
 import model.Subtask;
-import model.Task;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
