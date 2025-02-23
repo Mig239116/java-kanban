@@ -1,6 +1,9 @@
 package model;
 
+import com.google.gson.annotations.Expose;
+
 public class Subtask extends Task {
+    @Expose
     private Integer epicReference;
 
     public Subtask(String title, String description, TaskStatus status,

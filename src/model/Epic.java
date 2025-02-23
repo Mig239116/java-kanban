@@ -1,11 +1,15 @@
 package model;
 
+import com.google.gson.annotations.Expose;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Epic extends Task {
+     @Expose(deserialize = false)
      private ArrayList<Subtask> subtaskReferences;
+     @Expose(deserialize = false)
      private LocalDateTime endTime;
 
      public Epic(String title, String description) {
@@ -60,6 +64,9 @@ public class Epic extends Task {
          this.endTime = endTime;
     }
 
+    public void intiateSubtasksReferences() {
+         this.subtaskReferences = new ArrayList<>();
+    }
 
     @Override
     public String getEndTimeText() {

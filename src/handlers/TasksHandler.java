@@ -1,23 +1,13 @@
 package handlers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import com.sun.net.httpserver.HttpExchange;
-import conversion.TaskListTypeToken;
-import manager.InMemoryTaskManager;
+import exceptions.IntersectionException;
+import exceptions.NotFoundException;
 import manager.TaskManager;
 import model.Task;
-import model.TaskStatus;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 public class TasksHandler extends BaseHttpHandler {
 
@@ -29,7 +19,20 @@ public class TasksHandler extends BaseHttpHandler {
     protected void handleGet(HttpExchange httpExchange) throws IOException {
         String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
         if (pathParts.length == 2 & pathParts[1].equals("tasks")) {
-            sendText(httpExchange, gson.toJson(taskManager.getAllTasks()));
+            sendText(httpExchange, gson.toJson(taskManager.getAllTasks()), 200);
+        }
+        try{
+            if (pathParts.length == 3 & pathParts[1].equals("tasks")) {
+                if (getEntryId(httpExchange).isEmpty()) {
+                    sendText(httpExchange,"Некорректный идентификатор поста", 400);
+                    return;
+                }
+                sendText(httpExchange,
+                        gson.toJson(taskManager.getTaskById(this.getEntryId(httpExchange).get())),
+                        200);
+            }
+        } catch (NotFoundException e) {
+            sendText(httpExchange, e.getMessage(), 404);
         }
 
     }
@@ -37,18 +40,48 @@ public class TasksHandler extends BaseHttpHandler {
     @Override
     protected void handlePost(HttpExchange httpExchange) throws IOException{
         String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
-        if (pathParts.length == 2 & pathParts[1].equals("tasks")) {
-            List<Task> taskList = gson.fromJson(new String(httpExchange.getRequestBody().readAllBytes(),
-                    StandardCharsets.UTF_8), new TaskListTypeToken().getType());
-            for (Task task: taskList) {
+        try {
+            if (pathParts.length == 2 & pathParts[1].equals("tasks")) {
+                Task task = gson.fromJson(new String(httpExchange.getRequestBody().readAllBytes(),
+                        StandardCharsets.UTF_8), Task.class);
+
                 taskManager.createTask(task);
+                sendText(httpExchange, "Задача создана", 201);
             }
+            if (pathParts.length == 3 & pathParts[1].equals("tasks")) {
+                if (getEntryId(httpExchange).isEmpty()) {
+                    sendText(httpExchange,"Некорректный идентификатор поста", 400);
+                    return;
+                }
+                Task task = gson.fromJson(new String(httpExchange.getRequestBody().readAllBytes(),
+                        StandardCharsets.UTF_8), Task.class);
+                task.setTaskID(this.getEntryId(httpExchange).get());
+                taskManager.updateTask(task);
+                sendText(httpExchange, "Задача обновлена", 201);
+            }
+        } catch (NotFoundException e) {
+            sendText(httpExchange, e.getMessage(), 404);
+        } catch (IntersectionException e) {
+            sendText(httpExchange, e.getMessage(), 406);
         }
+
     }
 
     @Override
-    protected void handleDelete(){
-
+    protected void handleDelete(HttpExchange httpExchange) throws IOException{
+        String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
+        try{
+            if (pathParts.length == 3 & pathParts[1].equals("tasks")) {
+                if (getEntryId(httpExchange).isEmpty()) {
+                    sendText(httpExchange,"Некорректный идентификатор поста", 400);
+                    return;
+                }
+                taskManager.deleteTaskByID(this.getEntryId(httpExchange).get());
+                sendText(httpExchange, "Задача удалена", 200);
+            }
+        } catch (NotFoundException e) {
+            sendText(httpExchange, e.getMessage(), 404);
+        }
     }
 }
 

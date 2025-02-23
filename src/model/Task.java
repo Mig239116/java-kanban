@@ -1,16 +1,29 @@
 package model;
 
+import com.google.gson.annotations.Expose;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Task implements Comparable<Task> {
+    @Expose
     private String title;
+
+    @Expose
     private String description;
+
+    @Expose(deserialize = false)
     private int taskID;
+
+    @Expose
     private TaskStatus status;
+    @Expose
     private Duration duration;
+    @Expose
     private LocalDateTime startTime;
+
+    @Expose(serialize = false, deserialize = false)
     private DateTimeFormatter formatter;
 
     public Task(String title, String description, TaskStatus status, Integer duration, String startTime) {

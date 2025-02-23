@@ -1,6 +1,6 @@
 import com.sun.net.httpserver.HttpServer;
 
-import handlers.TasksHandler;
+import handlers.*;
 import manager.TaskManager;
 import manager.Managers;
 import model.Epic;
@@ -15,18 +15,40 @@ import java.net.InetSocketAddress;
 public class HttpTaskServer {
 
     private static final int PORT = 8080;
+    private static HttpServer httpServer;
+    private TaskManager manager;
+    private HttpServer testServer;
+
+    public HttpTaskServer(TaskManager manager) throws IOException {
+        this.manager = manager;
+        this.testServer =  HttpServer.create(new InetSocketAddress(8080), 0);
+        testServer.createContext("/tasks", new TasksHandler(this.manager));
+        testServer.createContext("/subtasks", new SubtasksHandler(this.manager));
+        testServer.createContext("/epics", new EpicsHandler(this.manager));
+        testServer.createContext("/history", new HistoryHandler(this.manager));
+        testServer.createContext("/prioritized", new PrioritizedHandler(this.manager));
+    }
 
     public static void main(String[] args) throws IOException {
         TaskManager taskManager = Managers.getDefault();
+        httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
         createAllTasks(taskManager);
-
-        HttpServer httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
         httpServer.createContext("/tasks", new TasksHandler(taskManager));
-
+        httpServer.createContext("/subtasks", new SubtasksHandler(taskManager));
+        httpServer.createContext("/epics", new EpicsHandler(taskManager));
+        httpServer.createContext("/history", new HistoryHandler(taskManager));
+        httpServer.createContext("/prioritized", new PrioritizedHandler(taskManager));
         httpServer.start();
 
     }
 
+    public void startServer(){
+        testServer.start();
+    }
+
+    public void stopServer() {
+        testServer.stop(1);
+    }
     private static void createAllTasks(TaskManager taskManager) {
         taskManager.createTask(new Task(
                         "Простая задача 1",
@@ -105,7 +127,7 @@ public class HttpTaskServer {
                         "Описание подзадачи 1",
                         TaskStatus.DONE,
                 10,
-                "10.03.2025 14:25",
+                "10.03.2038 14:25",
                         3
                 )
         );
@@ -115,7 +137,7 @@ public class HttpTaskServer {
                         "Описание подзадачи 2",
                         TaskStatus.IN_PROGRESS,
                 90,
-                "11.03.2025 14:25",
+                "11.03.2039 14:25",
                         3
                 )
         );

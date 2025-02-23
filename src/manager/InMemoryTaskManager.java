@@ -1,9 +1,13 @@
 package manager;
 
+import exceptions.IntersectionException;
+import exceptions.NotFoundException;
 import model.Epic;
 import model.Subtask;
 import model.Task;
+import model.TaskStatus;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -48,22 +52,26 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void createTask(Task task) {
+    public void createTask(Task task) throws IntersectionException{
         if (!checkIntersections(task)) {
             tasksCounter++;
             task.setTaskID(tasksCounter);
+            task.setFormatter(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
             taskDatabase.tasks.put(task.getTaskID(), task);
             if (!ifStartTimeIsNull(task)) {
                 addOrDeletePrioritizedTask(task, true);
             }
+        } else {
+            throw new IntersectionException("Задача пересекается с существующими");
         }
     }
 
     @Override
-    public void createSubtask(Subtask subtask) {
+    public void createSubtask(Subtask subtask) throws IntersectionException{
         if (this.isEpicExists(subtask.getEpicReference()) & !checkIntersections(subtask)) {
             tasksCounter++;
             subtask.setTaskID(tasksCounter);
+            subtask.setFormatter(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
             taskDatabase.subtasks.put(subtask.getTaskID(), subtask);
             Epic currentEpic = taskDatabase.epics.get(subtask.getEpicReference());
             currentEpic.addSubtask(subtask);
@@ -75,6 +83,9 @@ public class InMemoryTaskManager implements TaskManager {
                 addOrDeletePrioritizedTask(subtask, true);
             }
         }
+        if (checkIntersections(subtask)) {
+            throw new IntersectionException("Подзадача пересекается с существующими!");
+        }
     }
 
 
@@ -83,11 +94,17 @@ public class InMemoryTaskManager implements TaskManager {
     public void createEpic(Epic epic) {
         tasksCounter++;
         epic.setTaskID(tasksCounter);
+        epic.setFormatter(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+        epic.setStatus(TaskStatus.NEW);
+        epic.intiateSubtasksReferences();
+        epic.updateDuration();
+        epic.updateEndTime();
+        epic.updateStartTime();
         taskDatabase.epics.put(epic.getTaskID(), epic);
     }
 
     @Override
-    public void updateTask(Task task) {
+    public void updateTask(Task task) throws IntersectionException, NotFoundException {
         if (taskDatabase.tasks.containsKey(task.getTaskID()) & !checkIntersections(task)) {
             addOrDeletePrioritizedTask(taskDatabase.tasks.get(task.getTaskID()), false);
             taskDatabase.tasks.put(task.getTaskID(), task);
@@ -95,10 +112,16 @@ public class InMemoryTaskManager implements TaskManager {
                 addOrDeletePrioritizedTask(task, true);
             }
         }
+        if (!taskDatabase.tasks.containsKey(task.getTaskID())) {
+            throw new NotFoundException("Не найдена данная задача!");
+        }
+        if (checkIntersections(task)) {
+            throw new IntersectionException("Задача пересекается с существующими");
+        }
     }
 
     @Override
-    public void updateSubtask(Subtask newSubtask) {
+    public void updateSubtask(Subtask newSubtask) throws IntersectionException, NotFoundException {
         if (this.isSubtaskExists(newSubtask.getTaskID())
                 && this.isSubtaskEpicReferenceValid(newSubtask)
                 && !checkIntersections(newSubtask)) {
@@ -115,28 +138,39 @@ public class InMemoryTaskManager implements TaskManager {
                 addOrDeletePrioritizedTask(newSubtask, true);
             }
         }
+
+        if (!this.isSubtaskExists(newSubtask.getTaskID())) {
+            throw new NotFoundException("Такой подзадачи не существует");
+        }
+        if (checkIntersections(newSubtask)) {
+            throw new IntersectionException("Подзадача пересекается с существующими!");
+        }
     }
 
     @Override
-    public void updateEpic(Epic epic) {
+    public void updateEpic(Epic epic) throws NotFoundException {
         if (this.isEpicExists(epic.getTaskID())) {
             Epic currentEpic = taskDatabase.epics.get(epic.getTaskID());
             currentEpic.setTitle(epic.getTitle());
             currentEpic.setDescription(epic.getDescription());
+        } else {
+            throw new NotFoundException("Такого эпика не существует!");
         }
     }
 
     @Override
-    public void deleteTaskByID(int taskID) {
+    public void deleteTaskByID(int taskID) throws NotFoundException {
         if (taskDatabase.tasks.containsKey(taskID)) {
             historyManager.remove(taskID);
             addOrDeletePrioritizedTask(taskDatabase.tasks.get(taskID), false);
             taskDatabase.tasks.remove(taskID);
+        } else {
+            throw new NotFoundException("Такой задачи не обнаружено!");
         }
     }
 
     @Override
-    public void deleteSubtaskByID(int taskID) {
+    public void deleteSubtaskByID(int taskID) throws NotFoundException {
         if (this.isSubtaskExists(taskID)) {
             Subtask subtask = taskDatabase.subtasks.get(taskID);
             Epic currentEpic = taskDatabase.epics.get(subtask.getEpicReference());
@@ -148,11 +182,13 @@ public class InMemoryTaskManager implements TaskManager {
             historyManager.remove(taskID);
             addOrDeletePrioritizedTask(taskDatabase.subtasks.get(taskID), false);
             taskDatabase.subtasks.remove(taskID);
+        } else {
+            throw new NotFoundException("Такой подзадачи не обнаружено!");
         }
     }
 
     @Override
-    public void deleteEpicByID(int taskID) {
+    public void deleteEpicByID(int taskID) throws NotFoundException {
         if (this.isEpicExists(taskID)) {
             taskDatabase.epics.get(taskID).getSubtaskReferences()
                     .stream()
@@ -161,15 +197,19 @@ public class InMemoryTaskManager implements TaskManager {
                     .forEach(subtask -> taskDatabase.subtasks.remove(subtask.getTaskID()));
             historyManager.remove(taskID);
             taskDatabase.epics.remove(taskID);
+        } else {
+            throw new NotFoundException("Такого эпика не обнаружено!");
         }
     }
 
     @Override
-    public ArrayList<Subtask> getEpicsSubtasks(int taskID) {
+    public ArrayList<Subtask> getEpicsSubtasks(int taskID) throws NotFoundException {
         if (this.isEpicExists(taskID)) {
             return taskDatabase.epics.get(taskID).getSubtaskReferences();
+        } else {
+            throw new NotFoundException("Такого эпика не обнаружено!");
         }
-        return null;
+        //return null;
     }
 
     @Override
@@ -211,21 +251,33 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task getTaskById(int taskID) {
-        historyManager.add(taskDatabase.tasks.get(taskID));
-        return taskDatabase.tasks.get(taskID);
+    public Task getTaskById(int taskID) throws NotFoundException {
+        if (taskDatabase.tasks.get(taskID) != null) {
+            historyManager.add(taskDatabase.tasks.get(taskID));
+            return taskDatabase.tasks.get(taskID);
+        } else {
+            throw new NotFoundException("Такой задачи не обнаружено!");
+        }
     }
 
     @Override
-    public Subtask getSubtaskById(int taskID) {
-        historyManager.add(taskDatabase.subtasks.get(taskID));
-        return taskDatabase.subtasks.get(taskID);
+    public Subtask getSubtaskById(int taskID) throws NotFoundException{
+        if (taskDatabase.subtasks.get(taskID) != null) {
+            historyManager.add(taskDatabase.subtasks.get(taskID));
+            return taskDatabase.subtasks.get(taskID);
+        } else {
+            throw new NotFoundException("Такой подзадачи не обнаружено!");
+        }
     }
 
     @Override
-    public Epic getEpicById(int taskID) {
-        historyManager.add(taskDatabase.epics.get(taskID));
-        return taskDatabase.epics.get(taskID);
+    public Epic getEpicById(int taskID) throws NotFoundException{
+        if (taskDatabase.epics.get(taskID) != null) {
+            historyManager.add(taskDatabase.epics.get(taskID));
+            return taskDatabase.epics.get(taskID);
+        } else {
+            throw new NotFoundException("Такого эпика не обнаружено!");
+        }
     }
 
     @Override
