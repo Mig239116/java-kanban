@@ -42,13 +42,14 @@ public class HttpTaskServer {
 
     }
 
-    public void startServer(){
+    public void startServer() {
         testServer.start();
     }
 
     public void stopServer() {
         testServer.stop(1);
     }
+
     private static void createAllTasks(TaskManager taskManager) {
         taskManager.createTask(new Task(
                         "Простая задача 1",
