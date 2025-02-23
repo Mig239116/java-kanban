@@ -1,6 +1,6 @@
 package exceptions;
 
-public class IntersectionException extends RuntimeException{
+public class IntersectionException extends RuntimeException {
 
     public IntersectionException() {
 
