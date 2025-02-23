@@ -21,13 +21,13 @@ public class Subtask extends Task {
 
     public String toString() {
         return "model.Subtask { title= " + getTitle() + ",\n description= " + getDescription() + ",\n taskID= "
-                + getID() + ",\n status=" + getStatus() + ",\n start time=" + getStartTimeText() + ",\n duration="
+                + getTaskID() + ",\n status=" + getStatus() + ",\n start time=" + getStartTimeText() + ",\n duration="
                 + getDurationNumeric() + ",\n end time=" + getEndTimeText() + ",\n epicRef=" + epicReference + "}\n";
     }
 
     public String toLine() {
         return String.join(",",
-                Integer.toString(getID()),
+                Integer.toString(getTaskID()),
                 TaskType.SUBTASK.toString(),
                 getTitle(),
                 getStatus().toString(),

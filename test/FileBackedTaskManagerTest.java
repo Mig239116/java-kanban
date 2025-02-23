@@ -1,4 +1,3 @@
-import exceptions.ManagerLoadException;
 import manager.FileBackedTaskManager;
 import manager.InMemoryTaskManager;
 import model.Epic;
@@ -72,15 +71,15 @@ class FileBackedTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
         assertEquals(task, newTask, "Задания не равны");
         assertEquals(epic, newEpic, "Эпики не равны");
         assertEquals(subtask, newSubtask, "Подзадания не равны");
-        assertEquals(1, newTask.getID(), "Номер задачи не существует");
+        assertEquals(1, newTask.getTaskID(), "Номер задачи не существует");
         assertEquals("model.Task", newTask.getTitle(), "Название задачи неверное");
         assertEquals("model.Task", newTask.getDescription(), "Описание задачи неверное");
         assertEquals(TaskStatus.NEW, newTask.getStatus(), "Статус задачи неверный");
-        assertEquals(2, newEpic.getID(), "Номер задачи не существует");
+        assertEquals(2, newEpic.getTaskID(), "Номер задачи не существует");
         assertEquals("model.Task", newEpic.getTitle(), "Название задачи неверное");
         assertEquals("model.Task", newEpic.getDescription(), "Описание задачи неверное");
         assertEquals(TaskStatus.NEW, newEpic.getStatus(), "Статус задачи неверный");
-        assertEquals(3, newSubtask.getID(), "Номер задачи не существует");
+        assertEquals(3, newSubtask.getTaskID(), "Номер задачи не существует");
         assertEquals("model.Task", newSubtask.getTitle(), "Название задачи неверное");
         assertEquals("model.Task", newSubtask.getDescription(), "Описание задачи неверное");
         assertEquals(TaskStatus.NEW, newSubtask.getStatus(), "Статус задачи неверный");

@@ -43,7 +43,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     protected boolean isSubtaskEpicReferenceValid(Subtask newSubtask) {
-        Subtask existingSubtask = taskDatabase.subtasks.get(newSubtask.getID());
+        Subtask existingSubtask = taskDatabase.subtasks.get(newSubtask.getTaskID());
         return existingSubtask.getEpicReference() == newSubtask.getEpicReference();
     }
 
@@ -51,8 +51,8 @@ public class InMemoryTaskManager implements TaskManager {
     public void createTask(Task task) {
         if (!checkIntersections(task)) {
             tasksCounter++;
-            task.setID(tasksCounter);
-            taskDatabase.tasks.put(task.getID(), task);
+            task.setTaskID(tasksCounter);
+            taskDatabase.tasks.put(task.getTaskID(), task);
             if (!ifStartTimeIsNull(task)) {
                 addOrDeletePrioritizedTask(task, true);
             }
@@ -63,8 +63,8 @@ public class InMemoryTaskManager implements TaskManager {
     public void createSubtask(Subtask subtask) {
         if (this.isEpicExists(subtask.getEpicReference()) & !checkIntersections(subtask)) {
             tasksCounter++;
-            subtask.setID(tasksCounter);
-            taskDatabase.subtasks.put(subtask.getID(), subtask);
+            subtask.setTaskID(tasksCounter);
+            taskDatabase.subtasks.put(subtask.getTaskID(), subtask);
             Epic currentEpic = taskDatabase.epics.get(subtask.getEpicReference());
             currentEpic.addSubtask(subtask);
             currentEpic.updateStatus();
@@ -82,15 +82,15 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void createEpic(Epic epic) {
         tasksCounter++;
-        epic.setID(tasksCounter);
-        taskDatabase.epics.put(epic.getID(), epic);
+        epic.setTaskID(tasksCounter);
+        taskDatabase.epics.put(epic.getTaskID(), epic);
     }
 
     @Override
     public void updateTask(Task task) {
-        if (taskDatabase.tasks.containsKey(task.getID()) & !checkIntersections(task)) {
-            addOrDeletePrioritizedTask(taskDatabase.tasks.get(task.getID()), false);
-            taskDatabase.tasks.put(task.getID(), task);
+        if (taskDatabase.tasks.containsKey(task.getTaskID()) & !checkIntersections(task)) {
+            addOrDeletePrioritizedTask(taskDatabase.tasks.get(task.getTaskID()), false);
+            taskDatabase.tasks.put(task.getTaskID(), task);
             if (!ifStartTimeIsNull(task)) {
                 addOrDeletePrioritizedTask(task, true);
             }
@@ -99,14 +99,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateSubtask(Subtask newSubtask) {
-        if (this.isSubtaskExists(newSubtask.getID())
+        if (this.isSubtaskExists(newSubtask.getTaskID())
                 && this.isSubtaskEpicReferenceValid(newSubtask)
                 && !checkIntersections(newSubtask)) {
             Epic currentEpic = taskDatabase.epics.get(newSubtask.getEpicReference());
-            Subtask oldSubtask = currentEpic.getSubtask(newSubtask.getID());
+            Subtask oldSubtask = currentEpic.getSubtask(newSubtask.getTaskID());
             addOrDeletePrioritizedTask(oldSubtask, false);
             currentEpic.updateSubtask(oldSubtask, newSubtask);
-            taskDatabase.subtasks.put(newSubtask.getID(), newSubtask);
+            taskDatabase.subtasks.put(newSubtask.getTaskID(), newSubtask);
             currentEpic.updateStatus();
             currentEpic.updateStartTime();
             currentEpic.updateDuration();
@@ -119,8 +119,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateEpic(Epic epic) {
-        if (this.isEpicExists(epic.getID())) {
-            Epic currentEpic = taskDatabase.epics.get(epic.getID());
+        if (this.isEpicExists(epic.getTaskID())) {
+            Epic currentEpic = taskDatabase.epics.get(epic.getTaskID());
             currentEpic.setTitle(epic.getTitle());
             currentEpic.setDescription(epic.getDescription());
         }
@@ -156,9 +156,9 @@ public class InMemoryTaskManager implements TaskManager {
         if (this.isEpicExists(taskID)) {
             taskDatabase.epics.get(taskID).getSubtaskReferences()
                     .stream()
-                    .peek(subtask -> historyManager.remove(subtask.getID()))
+                    .peek(subtask -> historyManager.remove(subtask.getTaskID()))
                     .peek(subtask -> addOrDeletePrioritizedTask(subtask, false))
-                    .forEach(subtask -> taskDatabase.subtasks.remove(subtask.getID()));
+                    .forEach(subtask -> taskDatabase.subtasks.remove(subtask.getTaskID()));
             historyManager.remove(taskID);
             taskDatabase.epics.remove(taskID);
         }
@@ -176,7 +176,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteAllTasks() {
         taskDatabase.tasks.values()
                         .stream()
-                        .peek(task -> historyManager.remove(task.getID()))
+                        .peek(task -> historyManager.remove(task.getTaskID()))
                         .forEach(task -> addOrDeletePrioritizedTask(task, false));
         taskDatabase.tasks.clear();
     }
@@ -192,7 +192,7 @@ public class InMemoryTaskManager implements TaskManager {
                 .forEach(Epic::updateEndTime);
         taskDatabase.subtasks.values()
                 .stream()
-                .peek(subtask -> historyManager.remove(subtask.getID()))
+                .peek(subtask -> historyManager.remove(subtask.getTaskID()))
                 .forEach(subtask -> addOrDeletePrioritizedTask(subtask, false));
         taskDatabase.subtasks.clear();
     }
@@ -201,7 +201,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteAllEpics() {
         taskDatabase.subtasks.values()
                 .stream()
-                .peek(subtask -> historyManager.remove(subtask.getID()))
+                .peek(subtask -> historyManager.remove(subtask.getTaskID()))
                 .forEach(subtask -> addOrDeletePrioritizedTask(subtask, false));
         for (Integer id: taskDatabase.epics.keySet()) {
             historyManager.remove(id);
@@ -242,7 +242,7 @@ public class InMemoryTaskManager implements TaskManager {
     public boolean checkIntersections(Task task) {
         return getPrioritizedTasks()
                 .stream()
-                .filter(prioritizedTask -> prioritizedTask.getID() != task.getID())
+                .filter(prioritizedTask -> prioritizedTask.getTaskID() != task.getTaskID())
                 .anyMatch(prioritizedTask -> prioritizedTask.intersectsWith(task));
     }
 

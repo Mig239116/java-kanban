@@ -20,7 +20,7 @@ class SubtaskTest {
     public void cannotAddAsOwnEpic() {
         Subtask subtask = new Subtask(1, "model.Subtask", "First subtask", TaskStatus.DONE,
                 30, "01.02.1998 14:28", 1);
-        Epic epic = new Epic(subtask.getID(), subtask.getTitle(), subtask.getDescription());
+        Epic epic = new Epic(subtask.getTaskID(), subtask.getTitle(), subtask.getDescription());
         epic.addSubtask(subtask);
         Assertions.assertTrue(epic.getSubtaskReferences().isEmpty());
     }

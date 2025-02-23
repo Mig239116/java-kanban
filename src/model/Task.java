@@ -57,7 +57,7 @@ public class Task implements Comparable<Task> {
         }
     }
 
-    public int getID() {
+    public int getTaskID() {
         return taskID;
     }
 
@@ -101,7 +101,7 @@ public class Task implements Comparable<Task> {
         return formatter;
     }
 
-    public void setID(int taskID) {
+    public void setTaskID(int taskID) {
         this.taskID = taskID;
     }
 
@@ -142,7 +142,7 @@ public class Task implements Comparable<Task> {
 
     public String toLine() {
         return String.join(",",
-                Integer.toString(getID()),
+                Integer.toString(getTaskID()),
                 TaskType.TASK.toString(),
                 getTitle(),
                 getStatus().toString(),

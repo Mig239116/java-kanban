@@ -25,7 +25,7 @@ public class Epic extends Task {
 
     public Subtask getSubtask(int taskID) {
          for (Subtask subtask: subtaskReferences) {
-             if (subtask.getID() == taskID) {
+             if (subtask.getTaskID() == taskID) {
                  return subtask;
              }
          }
@@ -38,7 +38,7 @@ public class Epic extends Task {
     }
 
     public void addSubtask(Subtask subtask) {
-         if (this.getID() != subtask.getID()) {
+         if (this.getTaskID() != subtask.getTaskID()) {
              subtaskReferences.add(subtask);
          }
     }
@@ -145,13 +145,13 @@ public class Epic extends Task {
 
     public String toString() {
         return "model.Epic { title= " + getTitle() + ",\n description= " + getDescription() + ",\n taskID= "
-                + getID() + ",\n status=" + getStatus() + ",\n start time=" + getStartTimeText() + ",\n duration="
+                + getTaskID() + ",\n status=" + getStatus() + ",\n start time=" + getStartTimeText() + ",\n duration="
                 + getDurationNumeric() + ",\n end time=" + getEndTimeText() + ",\n subtasks=" + subtaskReferences + "}\n";
     }
 
     public String toLine() {
         return String.join(",",
-                Integer.toString(getID()),
+                Integer.toString(getTaskID()),
                 TaskType.EPIC.toString(),
                 getTitle(),
                 getStatus().toString(),
