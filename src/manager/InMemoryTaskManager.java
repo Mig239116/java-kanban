@@ -52,7 +52,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void createTask(Task task) throws IntersectionException{
+    public void createTask(Task task) throws IntersectionException {
         if (!checkIntersections(task)) {
             tasksCounter++;
             task.setTaskID(tasksCounter);
@@ -67,7 +67,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void createSubtask(Subtask subtask) throws IntersectionException{
+    public void createSubtask(Subtask subtask) throws IntersectionException {
         if (this.isEpicExists(subtask.getEpicReference()) & !checkIntersections(subtask)) {
             tasksCounter++;
             subtask.setTaskID(tasksCounter);
@@ -261,7 +261,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Subtask getSubtaskById(int taskID) throws NotFoundException{
+    public Subtask getSubtaskById(int taskID) throws NotFoundException {
         if (taskDatabase.subtasks.get(taskID) != null) {
             historyManager.add(taskDatabase.subtasks.get(taskID));
             return taskDatabase.subtasks.get(taskID);
@@ -271,7 +271,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Epic getEpicById(int taskID) throws NotFoundException{
+    public Epic getEpicById(int taskID) throws NotFoundException {
         if (taskDatabase.epics.get(taskID) != null) {
             historyManager.add(taskDatabase.epics.get(taskID));
             return taskDatabase.epics.get(taskID);
