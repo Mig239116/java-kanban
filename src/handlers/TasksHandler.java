@@ -21,7 +21,7 @@ public class TasksHandler extends BaseHttpHandler {
         if (pathParts.length == 2 & pathParts[1].equals("tasks")) {
             sendText(httpExchange, gson.toJson(taskManager.getAllTasks()), 200);
         }
-        try{
+        try {
             if (pathParts.length == 3 & pathParts[1].equals("tasks")) {
                 if (getEntryId(httpExchange).isEmpty()) {
                     sendText(httpExchange,"Некорректный идентификатор поста", 400);
@@ -38,7 +38,7 @@ public class TasksHandler extends BaseHttpHandler {
     }
 
     @Override
-    protected void handlePost(HttpExchange httpExchange) throws IOException{
+    protected void handlePost(HttpExchange httpExchange) throws IOException {
         String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
         try {
             if (pathParts.length == 2 & pathParts[1].equals("tasks")) {
@@ -68,9 +68,9 @@ public class TasksHandler extends BaseHttpHandler {
     }
 
     @Override
-    protected void handleDelete(HttpExchange httpExchange) throws IOException{
+    protected void handleDelete(HttpExchange httpExchange) throws IOException {
         String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
-        try{
+        try {
             if (pathParts.length == 3 & pathParts[1].equals("tasks")) {
                 if (getEntryId(httpExchange).isEmpty()) {
                     sendText(httpExchange,"Некорректный идентификатор поста", 400);
