@@ -38,8 +38,7 @@ public class EpicsHandler extends BaseHttpHandler {
                     return;
                 }
                 sendText(httpExchange,
-                        gson.toJson(taskManager.getEpicsSubtasks(this.getEntryId(httpExchange).get()))
-                        , 200);
+                        gson.toJson(taskManager.getEpicsSubtasks(this.getEntryId(httpExchange).get())), 200);
             }
         } catch (NotFoundException e) {
             sendText(httpExchange, e.getMessage(), 404);
