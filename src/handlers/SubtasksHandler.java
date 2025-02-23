@@ -21,7 +21,7 @@ public class SubtasksHandler extends BaseHttpHandler {
         if (pathParts.length == 2 & pathParts[1].equals("subtasks")) {
             sendText(httpExchange, gson.toJson(taskManager.getAllSubtasks()), 200);
         }
-        try{
+        try {
             if (pathParts.length == 3 & pathParts[1].equals("subtasks")) {
                 if (getEntryId(httpExchange).isEmpty()) {
                     sendText(httpExchange,"Некорректный идентификатор поста", 400);
@@ -37,9 +37,9 @@ public class SubtasksHandler extends BaseHttpHandler {
     }
 
     @Override
-    protected void handlePost(HttpExchange httpExchange) throws IOException{
+    protected void handlePost(HttpExchange httpExchange) throws IOException {
         String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
-        try{
+        try {
             if (pathParts.length == 2 & pathParts[1].equals("subtasks")) {
                 Subtask subtask = gson.fromJson(new String(httpExchange.getRequestBody().readAllBytes(),
                         StandardCharsets.UTF_8), Subtask.class);
@@ -67,7 +67,7 @@ public class SubtasksHandler extends BaseHttpHandler {
     }
 
     @Override
-    protected void handleDelete(HttpExchange httpExchange) throws IOException{
+    protected void handleDelete(HttpExchange httpExchange) throws IOException {
         String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
         try {
             if (pathParts.length == 3 & pathParts[1].equals("subtasks")) {
@@ -78,8 +78,7 @@ public class SubtasksHandler extends BaseHttpHandler {
                 taskManager.deleteSubtaskByID(this.getEntryId(httpExchange).get());
                 sendText(httpExchange, "Подзадача удалена", 200);
             }
-        }
-        catch (NotFoundException e) {
+        } catch (NotFoundException e) {
             sendText(httpExchange, e.getMessage(), 404);
         }
     }

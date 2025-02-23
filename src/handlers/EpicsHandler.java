@@ -41,14 +41,13 @@ public class EpicsHandler extends BaseHttpHandler {
                         gson.toJson(taskManager.getEpicsSubtasks(this.getEntryId(httpExchange).get()))
                         , 200);
             }
-        }
-        catch (NotFoundException e) {
+        } catch (NotFoundException e) {
             sendText(httpExchange, e.getMessage(), 404);
         }
     }
 
     @Override
-    protected void handlePost(HttpExchange httpExchange) throws IOException{
+    protected void handlePost(HttpExchange httpExchange) throws IOException {
         String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
         try {
             if (pathParts.length == 2 & pathParts[1].equals("epics")) {
@@ -76,15 +75,14 @@ public class EpicsHandler extends BaseHttpHandler {
     }
 
     @Override
-    protected void handleDelete(HttpExchange httpExchange) throws IOException{
+    protected void handleDelete(HttpExchange httpExchange) throws IOException {
         String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
         try {
             if (pathParts.length == 3 & pathParts[1].equals("epics")) {
                 taskManager.deleteEpicByID(this.getEntryId(httpExchange).get());
                 sendText(httpExchange, "Эпик удален", 200);
             }
-        }
-        catch (NotFoundException e) {
+        } catch (NotFoundException e) {
             sendText(httpExchange, e.getMessage(), 404);
         }
     }
