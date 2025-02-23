@@ -5,6 +5,7 @@ import model.Task;
 import model.TaskStatus;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -48,7 +49,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals("model.Task", epic.getTitle(), "Название задачи неверное");
         assertEquals("model.Task", epic.getDescription(), "Описание задачи неверное");
         assertEquals(TaskStatus.NEW, epic.getStatus(), "Статус задачи неверный");
-        assertNull(epic.getDuration(), "Длительность задачи неверный");
+        assertEquals(Duration.ofMinutes(0), epic.getDuration(), "Длительность задачи неверный");
         assertNull(epic.getStartTimeText(), "Дата начала задачи неверный");
     }
 
@@ -225,7 +226,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(TaskStatus.NEW,
                 updatedEpic.getStatus(),
                 "Неверный статус");
-        assertEquals(null,
+        assertEquals(Duration.ofMinutes(0),
                 updatedEpic.getDuration(),
                 "Неверная длительность");
         assertEquals(null,
