@@ -1,13 +1,11 @@
-import manager.InMemoryTaskManager;
 import manager.TaskManager;
 import model.Epic;
 import model.Subtask;
 import model.Task;
 import model.TaskStatus;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
+import java.time.Duration;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,7 +26,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Task task = manager.getTaskById(1);
         assertNotNull(task, "Задача не существует");
         assertEquals(originalTask, task, "Задачи не совпадают");
-        assertEquals(1, task.getID(), "Номер задачи не существует");
+        assertEquals(1, task.getTaskID(), "Номер задачи не существует");
         assertEquals("model.Task", task.getTitle(), "Название задачи неверное");
         assertEquals("model.Task", task.getDescription(), "Описание задачи неверное");
         assertEquals(TaskStatus.NEW, task.getStatus(), "Статус задачи неверный");
@@ -47,11 +45,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = manager.getEpicById(1);
         assertNotNull(epic, "Задача не существует");
         assertEquals(originalEpic, epic, "Задачи не совпадают");
-        assertEquals(1, epic.getID(), "Номер задачи не существует");
+        assertEquals(1, epic.getTaskID(), "Номер задачи не существует");
         assertEquals("model.Task", epic.getTitle(), "Название задачи неверное");
         assertEquals("model.Task", epic.getDescription(), "Описание задачи неверное");
         assertEquals(TaskStatus.NEW, epic.getStatus(), "Статус задачи неверный");
-        assertNull(epic.getDuration(), "Длительность задачи неверный");
+        assertEquals(Duration.ofMinutes(0), epic.getDuration(), "Длительность задачи неверный");
         assertNull(epic.getStartTimeText(), "Дата начала задачи неверный");
     }
 
@@ -72,7 +70,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Subtask subtask = manager.getSubtaskById(2);
         assertNotNull(subtask, "Задача не существует");
         assertEquals(originalSubtask, subtask, "Задачи не совпадают");
-        assertEquals(2, subtask.getID(), "Номер задачи не существует");
+        assertEquals(2, subtask.getTaskID(), "Номер задачи не существует");
         assertEquals("model.Task", subtask.getTitle(), "Название задачи неверное");
         assertEquals("model.Task", subtask.getDescription(), "Описание задачи неверное");
         assertEquals(TaskStatus.NEW, subtask.getStatus(), "Статус задачи неверный");
@@ -138,7 +136,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         manager.createTask(task);
         Task savedTask = manager.getTaskById(1);
         assertEquals(1,
-                savedTask.getID(), "Неверный идентификатор задачи");
+                savedTask.getTaskID(), "Неверный идентификатор задачи");
         assertEquals(savedTask.getTitle(),
                 task.getTitle(),
                 "Неверная название задачи");
@@ -191,7 +189,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Task updatedTask = manager.getTaskById(1);
         assertNotNull(updatedTask);
         assertEquals(1,
-                updatedTask.getID(),
+                updatedTask.getTaskID(),
                 "Неверный идентификатор задачи");
         assertEquals("Title1",
                 updatedTask.getTitle(),
@@ -217,7 +215,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Epic updatedEpic = manager.getEpicById(1);
         assertNotNull(updatedEpic);
         assertEquals(1,
-                updatedEpic.getID(),
+                updatedEpic.getTaskID(),
                 "Неверный идентификатор задачи");
         assertEquals("Title1",
                 updatedEpic.getTitle(),
@@ -228,7 +226,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(TaskStatus.NEW,
                 updatedEpic.getStatus(),
                 "Неверный статус");
-        assertEquals(null,
+        assertEquals(Duration.ofMinutes(0),
                 updatedEpic.getDuration(),
                 "Неверная длительность");
         assertEquals(null,
@@ -250,7 +248,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Subtask updatedSubtask = manager.getSubtaskById(2);
         assertNotNull(updatedSubtask);
         assertEquals(2,
-                updatedSubtask.getID(),
+                updatedSubtask.getTaskID(),
                 "Неверный идентификатор задачи");
         assertEquals("Title1",
                 updatedSubtask.getTitle(),
@@ -306,7 +304,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         manager.getTaskById(1);
         List<Task> history = manager.getHistory();
         assertEquals(1, history.size());
-        manager.deleteTaskByID(manager.getTaskById(1).getID());
+        manager.deleteTaskByID(manager.getTaskById(1).getTaskID());
         List<Task> tasks = manager.getAllTasks();
         history = manager.getHistory();
         assertNotNull(tasks);
@@ -320,7 +318,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         manager.getEpicById(1);
         List<Task> history = manager.getHistory();
         assertEquals(1, history.size());
-        manager.deleteEpicByID(manager.getEpicById(1).getID());
+        manager.deleteEpicByID(manager.getEpicById(1).getTaskID());
         List<Epic> epics = manager.getAllEpics();
         history = manager.getHistory();
         assertNotNull(epics);
@@ -336,7 +334,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         manager.getSubtaskById(2);
         List<Task> history = manager.getHistory();
         assertEquals(1, history.size());
-        manager.deleteSubtaskByID(manager.getSubtaskById(2).getID());
+        manager.deleteSubtaskByID(manager.getSubtaskById(2).getTaskID());
         List<Subtask> subtasks = manager.getAllSubtasks();
         history = manager.getHistory();
         assertNotNull(subtasks);

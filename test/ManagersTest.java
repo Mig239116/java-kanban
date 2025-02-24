@@ -24,7 +24,7 @@ class ManagersTest {
         assertTrue(taskManager.getAllSubtasks().isEmpty(), "Список подзадач не пуст");
         taskManager.createTask(new Task("task1", "task1", TaskStatus.NEW,
                 30, "05.09.2025 14:28"));
-        assertEquals(1, taskManager.getTaskById(1).getID(),
+        assertEquals(1, taskManager.getTaskById(1).getTaskID(),
                 "Генератор идентификаторов работает неверно");
     }
 

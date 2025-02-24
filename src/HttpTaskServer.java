@@ -1,31 +1,53 @@
-import manager.FileBackedTaskManager;
+import com.sun.net.httpserver.HttpServer;
+
+import handlers.*;
 import manager.TaskManager;
+import manager.Managers;
 import model.Epic;
 import model.Subtask;
 import model.Task;
 import model.TaskStatus;
 
-import java.io.File;
 
-public class Main {
+import java.io.IOException;
+import java.net.InetSocketAddress;
 
-    public static void main(String[] args) {
+public class HttpTaskServer {
 
-        FileBackedTaskManager taskManager =
-                new FileBackedTaskManager(
-                System.getProperty("user.home") + "/checkFile.csv");
+    private static final int PORT = 8080;
+    private static HttpServer httpServer;
+    private TaskManager manager;
+    private HttpServer testServer;
+
+    public HttpTaskServer(TaskManager manager) throws IOException {
+        this.manager = manager;
+        this.testServer =  HttpServer.create(new InetSocketAddress(8080), 0);
+        testServer.createContext("/tasks", new TasksHandler(this.manager));
+        testServer.createContext("/subtasks", new SubtasksHandler(this.manager));
+        testServer.createContext("/epics", new EpicsHandler(this.manager));
+        testServer.createContext("/history", new HistoryHandler(this.manager));
+        testServer.createContext("/prioritized", new PrioritizedHandler(this.manager));
+    }
+
+    public static void main(String[] args) throws IOException {
+        TaskManager taskManager = Managers.getDefault();
+        httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
         createAllTasks(taskManager);
-        File sourceFile = new File(System.getProperty("user.home") + "/checkFile.csv");
-        FileBackedTaskManager taskManager1 = FileBackedTaskManager.loadFromFile(sourceFile);
-        taskManager1.createTask(new Task(
-                        "Проверка счетчика задач",
-                        "Должен быть больше максимального ID",
-                        TaskStatus.NEW,
-                        30,
-                        "08.02.2024 13:47"
-                )
-        );
-        printAllTasks(taskManager1);
+        httpServer.createContext("/tasks", new TasksHandler(taskManager));
+        httpServer.createContext("/subtasks", new SubtasksHandler(taskManager));
+        httpServer.createContext("/epics", new EpicsHandler(taskManager));
+        httpServer.createContext("/history", new HistoryHandler(taskManager));
+        httpServer.createContext("/prioritized", new PrioritizedHandler(taskManager));
+        httpServer.start();
+
+    }
+
+    public void startServer() {
+        testServer.start();
+    }
+
+    public void stopServer() {
+        testServer.stop(1);
     }
 
     private static void createAllTasks(TaskManager taskManager) {
@@ -106,7 +128,7 @@ public class Main {
                         "Описание подзадачи 1",
                         TaskStatus.DONE,
                 10,
-                "10.03.2025 14:25",
+                "10.03.2038 14:25",
                         3
                 )
         );
@@ -116,7 +138,7 @@ public class Main {
                         "Описание подзадачи 2",
                         TaskStatus.IN_PROGRESS,
                 90,
-                "11.03.2025 14:25",
+                "11.03.2039 14:25",
                         3
                 )
         );
@@ -127,15 +149,15 @@ public class Main {
     private static void printAllTasks(TaskManager manager) {
         System.out.println("Задачи:");
         for (Task task : manager.getAllTasks()) {
-            System.out.println(manager.getTaskById(task.getID()));
+            System.out.println(manager.getTaskById(task.getTaskID()));
         }
         System.out.println("Эпики:");
         for (Task epic : manager.getAllEpics()) {
-            System.out.println(manager.getEpicById(epic.getID()));
+            System.out.println(manager.getEpicById(epic.getTaskID()));
         }
         System.out.println("Подзадачи:");
         for (Task subtask : manager.getAllSubtasks()) {
-            System.out.println(manager.getSubtaskById(subtask.getID()));
+            System.out.println(manager.getSubtaskById(subtask.getTaskID()));
         }
         System.out.println("Приоритеты:");
         System.out.println(manager.getPrioritizedTasks());

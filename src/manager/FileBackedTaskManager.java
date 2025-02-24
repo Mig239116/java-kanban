@@ -11,7 +11,7 @@ import java.io.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
 
-private File autoSaveFile;
+    private File autoSaveFile;
     final String fieldsNames = "id,type,name,status,description,startTime,duration,epic";
 
     public FileBackedTaskManager(String fileFullPath) {
@@ -66,25 +66,25 @@ private File autoSaveFile;
                 workingLine = bufferedReader.readLine();
                 if (workingLine.contains(TaskType.SUBTASK.toString())) {
                     Subtask subtask = Subtask.fromLine(workingLine);
-                    if (fileBackedTaskManager.tasksCounter < subtask.getID()) {
-                        fileBackedTaskManager.tasksCounter = subtask.getID();
+                    if (fileBackedTaskManager.tasksCounter < subtask.getTaskID()) {
+                        fileBackedTaskManager.tasksCounter = subtask.getTaskID();
                     }
-                        fileBackedTaskManager.taskDatabase.subtasks.put(subtask.getID(),
+                        fileBackedTaskManager.taskDatabase.subtasks.put(subtask.getTaskID(),
                                 subtask);
 
                 } else if (workingLine.contains(TaskType.EPIC.toString())) {
                     Epic epic = Epic.fromLine(workingLine);
-                    if (fileBackedTaskManager.tasksCounter < epic.getID()) {
-                        fileBackedTaskManager.tasksCounter = epic.getID();
+                    if (fileBackedTaskManager.tasksCounter < epic.getTaskID()) {
+                        fileBackedTaskManager.tasksCounter = epic.getTaskID();
                     }
-                    fileBackedTaskManager.taskDatabase.epics.put(epic.getID(),
+                    fileBackedTaskManager.taskDatabase.epics.put(epic.getTaskID(),
                             epic);
                 } else {
                     Task task = Task.fromLine(workingLine);
-                    if (fileBackedTaskManager.tasksCounter < task.getID()) {
-                        fileBackedTaskManager.tasksCounter = task.getID();
+                    if (fileBackedTaskManager.tasksCounter < task.getTaskID()) {
+                        fileBackedTaskManager.tasksCounter = task.getTaskID();
                     }
-                    fileBackedTaskManager.taskDatabase.tasks.put(task.getID(),
+                    fileBackedTaskManager.taskDatabase.tasks.put(task.getTaskID(),
                             task);
                     fileBackedTaskManager.addOrDeletePrioritizedTask(task, true);
                 }
@@ -101,7 +101,7 @@ private File autoSaveFile;
                         currentEpic.updateEndTime();
                         fileBackedTaskManager.addOrDeletePrioritizedTask(subtask, true);
                     } else {
-                        fileBackedTaskManager.taskDatabase.subtasks.remove(subtask.getID());
+                        fileBackedTaskManager.taskDatabase.subtasks.remove(subtask.getTaskID());
                     }
                 }
         } catch (IOException exception) {

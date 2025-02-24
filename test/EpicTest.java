@@ -15,8 +15,8 @@ class EpicTest {
     @Test
     public void cannotBeAddedAsOwnSubtask() {
         Epic epic = new Epic(1, "Epic1", "First epic");
-        epic.addSubtask(new Subtask(epic.getID(), epic.getTitle(), epic.getDescription(), epic.getStatus(),
-                epic.getDurationNumeric(), epic.getStartTimeText(), epic.getID()));
+        epic.addSubtask(new Subtask(epic.getTaskID(), epic.getTitle(), epic.getDescription(), epic.getStatus(),
+                epic.getDurationNumeric(), epic.getStartTimeText(), epic.getTaskID()));
         Assertions.assertTrue(epic.getSubtaskReferences().isEmpty());
     }
 
