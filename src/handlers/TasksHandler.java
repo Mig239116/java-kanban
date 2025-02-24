@@ -46,7 +46,8 @@ public class TasksHandler extends BaseHttpHandler {
                         StandardCharsets.UTF_8), Task.class);
 
                 taskManager.createTask(task);
-                sendText(httpExchange, "Задача создана", 201);
+                String message = "{\"taskID\": " + task.getTaskID() + ",\"message\": \"Задача создана\"}";
+                sendText(httpExchange, message, 201);
             }
             if (pathParts.length == 3 & pathParts[1].equals("tasks")) {
                 if (getEntryId(httpExchange).isEmpty()) {

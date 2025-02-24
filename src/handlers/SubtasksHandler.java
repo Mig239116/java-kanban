@@ -45,7 +45,8 @@ public class SubtasksHandler extends BaseHttpHandler {
                         StandardCharsets.UTF_8), Subtask.class);
 
                 taskManager.createSubtask(subtask);
-                sendText(httpExchange, "Подзадача создана", 201);
+                String message = "{\"taskID\": " + subtask.getTaskID() + ",\"message\": \"Подзадача создана\"}";
+                sendText(httpExchange, message, 201);
             }
             if (pathParts.length == 3 & pathParts[1].equals("subtasks")) {
                 if (getEntryId(httpExchange).isEmpty()) {

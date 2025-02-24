@@ -53,7 +53,8 @@ public class EpicsHandler extends BaseHttpHandler {
                 Epic epic = gson.fromJson(new String(httpExchange.getRequestBody().readAllBytes(),
                         StandardCharsets.UTF_8), Epic.class);
                 taskManager.createEpic(epic);
-                sendText(httpExchange, "Эпик создан", 201);
+                String message = "{\"taskID\": " + epic.getTaskID() + ",\"message\": \"Эпик создан\"}";
+                sendText(httpExchange, message, 201);
             }
             if (pathParts.length == 3 & pathParts[1].equals("epics")) {
                 if (getEntryId(httpExchange).isEmpty()) {
