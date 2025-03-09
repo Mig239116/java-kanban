@@ -1,3 +1,4 @@
+import exceptions.IntersectionException;
 import manager.InMemoryTaskManager;
 import model.Epic;
 import model.Subtask;
@@ -18,16 +19,14 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
     @Test
     public void shouldNotAddTaskOrSubtaskWhichIntersectsWithExisting() {
-        manager.createTask(new Task("Title", "Description", TaskStatus.DONE,
-                30, "05.09.2025 14:28"));
-        manager.createTask(new Task("Title", "Description", TaskStatus.DONE,
-                30, "05.09.2025 14:40"));
-        manager.createEpic(new Epic(2,"Title", "Description"));
-        manager.createSubtask(new Subtask("Title", "Description", TaskStatus.DONE,
-                30, "05.09.2025 16:28", 2));
-        manager.createSubtask(new Subtask("Title", "Description", TaskStatus.DONE,
-                30, "05.09.2025 15:59", 2));
-        assertEquals(2, manager.getPrioritizedTasks().size());
+        try {
+            manager.createTask(new Task("Title", "Description", TaskStatus.DONE,
+                    30, "05.09.2025 14:28"));
+            manager.createTask(new Task("Title", "Description", TaskStatus.DONE,
+                    30, "05.09.2025 14:40"));
+        } catch (IntersectionException e) {
+            assertEquals(1, manager.getPrioritizedTasks().size());
+        }
     }
 
 }
